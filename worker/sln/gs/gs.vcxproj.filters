@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Containers">
+      <UniqueIdentifier>{a6f4e63d-65a4-4aae-b8f9-d0169f23283c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers">
+      <UniqueIdentifier>{7df0fe12-663f-4767-8434-c3a8612e6080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SCMs">
+      <UniqueIdentifier>{c9c7ff0b-de28-46f5-a69e-d4b1fb49de19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SCMs">
+      <UniqueIdentifier>{e9754548-7668-470c-a9d2-c401649863bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Astro">
+      <UniqueIdentifier>{56b36150-5164-4bab-899b-2108ae82f7ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Astro">
+      <UniqueIdentifier>{311e9738-dde9-4eff-a66c-5abb39ab04d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MatFileIO">
+      <UniqueIdentifier>{9a0a7b72-bf08-472d-8bed-f7a39ca45990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MatFileIO">
+      <UniqueIdentifier>{3c542a93-b03b-478c-bb11-ef113cde63d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\STDP">
+      <UniqueIdentifier>{4404cecf-c352-4a96-8bdb-783afd8e58bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\STDP">
+      <UniqueIdentifier>{9a235c62-4794-423f-8c02-8428a8ad8d0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Kinetic">
+      <UniqueIdentifier>{63c7eda8-5c6a-4e30-a544-d01c53ba8cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FakeMPI">
+      <UniqueIdentifier>{710310a0-1554-4aa3-b742-c8fa82e45d93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FakeMPI">
+      <UniqueIdentifier>{07dabbb2-fd65-4653-90b1-66d9221823b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ExtraCurrent">
+      <UniqueIdentifier>{17de4568-39d1-430a-92f6-e905e79eb0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ExtraCurrent">
+      <UniqueIdentifier>{11bd7efb-d7fd-44af-ba5f-b9f9bbd9a6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GABA">
+      <UniqueIdentifier>{bb2648c4-c314-4af7-808f-25d6c321084d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GABA">
+      <UniqueIdentifier>{20a6d1ce-3c74-4c8c-94e1-16865ab68a43}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GammaSimulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DistEnv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GetTypeTagUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DistributionWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\OtherFileIOUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SclModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\LocalMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\LocalSparseMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\LocalVector.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\Matrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\Vector.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\SimpleSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\SCMFactory.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\SCMBase.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\OneBitSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\InPlaceSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\Container.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\DistDenseMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\DistVector.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\DistSparseMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\DistMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\LocalDenseMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\SparseSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\UniformSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\ZeroSCM.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Containers\DenseMatrix.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SCMs\ScmType.h">
+      <Filter>Header Files\SCMs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Astro\AstroNet.h">
+      <Filter>Header Files\Astro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Astro\Ca_rhp.h">
+      <Filter>Header Files\Astro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Astro\ip3_rhp.h">
+      <Filter>Header Files\Astro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Astro\q_rhp.h">
+      <Filter>Header Files\Astro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\BoostedBernoulliDistribution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MatFileIO\MatFileIOUtils.h">
+      <Filter>Header Files\MatFileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\STDP\BaseStdpMechanism.h">
+      <Filter>Header Files\STDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\h_e_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\h_i_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\m_e_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\m_i_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\n_e_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\n_i_inf.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\tau_h_e.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\tau_h_i.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\tau_n_e.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Kinetic\tau_n_i.h">
+      <Filter>Header Files\Kinetic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\STDP\TabulatedStdpMechanism.h">
+      <Filter>Header Files\STDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\STDP\AnalyticStdpMechanism.h">
+      <Filter>Header Files\STDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\FakeMPI\mpi.h">
+      <Filter>Header Files\FakeMPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExtraCurrent\a_rhp.h">
+      <Filter>Header Files\ExtraCurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExtraCurrent\b_rhp.h">
+      <Filter>Header Files\ExtraCurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExtraCurrent\ExtraCurrent.h">
+      <Filter>Header Files\ExtraCurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExtraCurrent\ComputeExtraCurrent.h">
+      <Filter>Header Files\ExtraCurrent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GABA\GABA.h">
+      <Filter>Header Files\GABA</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GammaSimulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ElementwiseOp2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ElementwiseOp3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ElementwiseOp4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DistEnv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DoSimulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ElementwiseOp1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DistributionWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExternalDrives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ComputeSynCoef.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ComputePotObsPts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\UpdateIdxTNumSpikes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\OtherFileIOUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FixCurrentProgress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\LocalVector.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\LocalSparseMatrix.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\LocalDenseMatrix.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\DistVector.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\DistSparseMatrix.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Containers\DistDenseMatrix.cpp">
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\InPlaceSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\OneBitSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\SCMFactory.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\SimpleSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\SparseSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\UniformSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\ZeroSCM.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SCMs\SCMBase.cpp">
+      <Filter>Source Files\SCMs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Astro\AstroNet.cpp">
+      <Filter>Source Files\Astro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Astro\AstroDoOneStepPart1.cpp">
+      <Filter>Source Files\Astro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Astro\AstroDoOneStepPart2.cpp">
+      <Filter>Source Files\Astro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Astro\AstroCorrectReleaseProbability.cpp">
+      <Filter>Source Files\Astro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\BoostedBernoulliDistribution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Astro\AstroReadAllocateWrite.cpp">
+      <Filter>Source Files\Astro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MathUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MatFileIO\MatFileIOUtils.cpp">
+      <Filter>Source Files\MatFileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MatFileIO\GatherWriteIntermediateData.cpp">
+      <Filter>Source Files\MatFileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MatFileIO\ReadInputDataAllocateTemporaryArrays.cpp">
+      <Filter>Source Files\MatFileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MatFileIO\WriteOutputData.cpp">
+      <Filter>Source Files\MatFileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\STDP\BaseStdpMechanism.cpp">
+      <Filter>Source Files\STDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\STDP\TabulatedStdpMechanism.cpp">
+      <Filter>Source Files\STDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\STDP\AnalyticStdpMechanism.cpp">
+      <Filter>Source Files\STDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\FakeMPI\mpi.cpp">
+      <Filter>Source Files\FakeMPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExtraCurrent\ExtraCurrent.cpp">
+      <Filter>Source Files\ExtraCurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExtraCurrent\XCurDoOneStepPart1.cpp">
+      <Filter>Source Files\ExtraCurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExtraCurrent\XCurDoOneStepPart2.cpp">
+      <Filter>Source Files\ExtraCurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExtraCurrent\XCurReadAllocateWrite.cpp">
+      <Filter>Source Files\ExtraCurrent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GABA\GABA.cpp">
+      <Filter>Source Files\GABA</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>

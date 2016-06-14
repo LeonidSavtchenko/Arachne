@@ -1,0 +1,10 @@
+Gamma simulator uses some 3rd party applications and source code as listed below:
+
+Application                             Downloaded from
+host\Code\3rdparty\plink.exe            http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+host\Code\3rdparty\pscp.exe             --||--
+host\Code\3rdparty\7za.exe              http://www.7-zip.org/download.html
+
+Source code file                        Function            Downloaded from
+host\Code\InputDataUtils\normpdf.m      normpdf             http://www.mathworks.com/matlabcentral/fileexchange/21903-mphys/content/mPhys/Stats/normpdf.m
+host\Code\OtherUtils\strjoin.m          strjoin             http://www.mathworks.com/matlabcentral/fileexchange/39143-strjoin/content/strjoin.m
