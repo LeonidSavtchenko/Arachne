@@ -14,7 +14,7 @@ function AddHpcParams_for_UTILITY_ComputeMaxModelSize()
     
     remoteHPC = true;
     
-    AddStringVector('loadedNodes', '{''tuxmaster'', ''tuxm1'', ''tuxm2'', ''tuxm3'', ''tuxm4'', ''tuxm5'', ''tuxm6'', ''tuxm7'', ''tuxm8'', ''tuxm9'', ''tuxm10'', ''tuxm11'', ''tuxm12''}', 'List of nodes to run simulation on', true, 'valPred_loadedNodes(loadedNodes)');
+    AddStringVector('loadedNodes', '{''tuxm1'', ''tuxm2'', ''tuxm3'', ''tuxm4'', ''tuxm5'', ''tuxm6'', ''tuxm7'', ''tuxm8'', ''tuxm9'', ''tuxm10'', ''tuxm11'', ''tuxm12''}', 'List of nodes to run simulation on', true, 'valPred_loadedNodes(loadedNodes)');
     
     scmTypesList = fieldnames(ScmTypes);
     scmTypesDesc = {'The matrix is not generated explicitly. <br>All elements are zeros', ...
