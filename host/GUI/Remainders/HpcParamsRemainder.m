@@ -1,7 +1,7 @@
 function HpcParamsRemainder()
 
     global remoteHPC backgroundMode scalTest
-    global useSPA distMatPVH fakeMPI saveIntermMat class outFileName
+    global useSPA distMatPVH fakeMPI saveIntermMat class
     global hostParams idleMaster memPerNodeLimit
     global loadedNodes
 
