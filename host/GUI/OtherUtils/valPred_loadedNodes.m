@@ -21,14 +21,14 @@ function valid = valPred_loadedNodes(loadedNodes)
     
     for node = loadedNodes
         matchFound = false;
-        for i = 0 : slaveNodesCount
-            if strcmp(node, strcat('tuxm', num2str(i)))
-                if slaveNodes(1, i)
+        for i = 1 : slaveNodesCount
+            if strcmp(node, availableNodes(i))
+                if slaveNodes(i)
                     % duplicate slave node
                     valid = false;
                     break
                 else
-                    slaveNodes(1, i) = true;
+                    slaveNodes(i) = true;
                     matchFound = true;
                     break
                 end
