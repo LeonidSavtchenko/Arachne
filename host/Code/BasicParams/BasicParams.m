@@ -1,6 +1,6 @@
 function BasicParams()
 
-    global remoteHPC availableNodes useGUI
+    global remoteHPC availableNodes ramPerNode useGUI
     global debugMode
     
     % Structs
@@ -22,6 +22,10 @@ function BasicParams()
                       'tuxm10', ...
                       'tuxm11', ...
                       'tuxm12'};
+    
+    % Minimum amount of physical memory installed on a cluster node (in megabytes).
+    % The simulation will not start if more than 75% is expected to be used.
+    ramPerNode = 8192;
     
     % Whether to use Graphic User Interface to prepare input parameters
     useGUI = true;

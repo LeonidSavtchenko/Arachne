@@ -1,7 +1,7 @@
 function valid = valPred_loadedNodes(loadedNodes)
 %% Validation predicate for "loadedNodes" cell array of strings
 
-    global idleMaster availableNodes
+    global availableNodes
     global scalTest np maxNP
     
     if ~scalTest
@@ -15,26 +15,26 @@ function valid = valPred_loadedNodes(loadedNodes)
         return
     end
     
-    idleMaster = true;
-    slaveNodesCount = length(availableNodes);
-    slaveNodes = false(1, slaveNodesCount);
+    nodesCount = length(availableNodes);
+    nodesUsage = false(1, nodesCount);
     
     for node = loadedNodes
         matchFound = false;
-        for i = 1 : slaveNodesCount
+        for i = 1 : nodesCount
             if strcmp(node, availableNodes(i))
-                if slaveNodes(i)
-                    % duplicate slave node
+                if nodesUsage(i)
+                    % Duplicate node
                     valid = false;
-                    break
                 else
-                    slaveNodes(i) = true;
+                    % Free node
+                    nodesUsage(i) = true;
                     matchFound = true;
-                    break
                 end
+                break
             end
         end
         if ~matchFound
+            % Not found node
             valid = false;
             break
         end

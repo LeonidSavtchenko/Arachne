@@ -2,7 +2,7 @@ function HpcParamsRemainder()
 
     global remoteHPC backgroundMode scalTest
     global useSPA distMatPVH fakeMPI saveIntermMat class
-    global hostParams idleMaster memPerNodeLimit
+    global hostParams ramPerNode memPerNodeLimit
     global loadedNodes
 
     if useSPA
@@ -17,14 +17,7 @@ function HpcParamsRemainder()
 
         % Limit of physical memory usage per cluster node (in megabytes).
         % The simulation will not start if the limit is exceeded.
-        if idleMaster
-            % The limit is implied by slave node RAM
-            ram = 8192; 
-        else
-            % The limit is implied by master node RAM
-            ram = 3072;
-        end
-        memPerNodeLimit = ram * 0.75;
+        memPerNodeLimit = ramPerNode * 0.75;
     end
 
     %% Set values to some non-relevant, but used parameters
