@@ -1,0 +1,6 @@
+*.bat text eol=crlf
+*.cpp text eol=crlf
+*.h text eol=crlf
+*.m text eol=crlf
+
+*.sh text eol=lf
