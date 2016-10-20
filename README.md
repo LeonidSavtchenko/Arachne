@@ -3,13 +3,19 @@ Software for the synthesis of realistic neural networks and their numerical proc
 
 A set of basic input parameters necessary for reproduction plots in the manuscript submitted to Plos
 
-Installation.
+Installation. 
 
-1. Basic pre-install software on both kernel on claster and the local GNI.
+There are three versions of the program. Each version has its own characteristics installation.
 
-2. Basic preistalation software on claster and MatLab open sourse utility.
 
-3. Open sourse kernel (C++) and open sourse local MatLab utility. 
+
+1. The basic version. Pre-installed kernel in a cluster and an executable file under the window with GNI.
+
+
+
+2. The second version. Pre-installed kernel in a cluster and MatLab files. 
+
+3. The third versionn. Open sourse kernel (C++) and open sourse local MatLab utility. 
 
 
 To install Arachne:
