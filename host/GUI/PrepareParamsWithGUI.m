@@ -283,6 +283,9 @@ function pushbutton_OK_Callback(~, ~)
         EvaluateAllRemainders(guiType);
     end
     
+    % Translate all the MOD files to C++ source and header files for both "e" and "i" neurons
+    TranslateModFiles();
+    
     % Save input parameters
     if saveInput2Output
         SaveParams('guiParams.mat');

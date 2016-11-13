@@ -1,8 +1,8 @@
 @echo off
 
 set "VSDIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0"
-set "MLDIR=D:\ucl\ide\R2013a"
-set "GSDIR=D:\ucl\svn\phase11\worker"
+set "MLDIR=C:\Program Files\MATLAB\R2013a"
+set "GSDIR=D:\ucl\svn\phase12\worker"
 
 set MLINCLDIR="%MLDIR%\extern\include"
 set MLLIBDIR="%MLDIR%\extern\lib\win64\microsoft"

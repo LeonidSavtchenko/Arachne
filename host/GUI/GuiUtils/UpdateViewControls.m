@@ -38,10 +38,11 @@ function UpdateViewControls()
                 min = get(handlers(2), 'Min');
                 max = get(handlers(2), 'Max');
             else
-                max = 0; min = 0;
+                max = 0;
+                min = 0;
             end
-            if (max - min) > 1
-                % text area is evaluated elsewhere
+            if max - min > 1
+                % Text area is evaluated elsewhere
             elseif ischar(value)
                 try
                     value = eval(value);
@@ -133,12 +134,12 @@ function UpdateViewControls()
                         set(handler, 'BackgroundColor', color);
                     end
                     if rel && ~val
-                        invalidParams{end + 1} = params{panIdx_}{parIdx}.name;
+                        invalidParams{end + 1} = params{panIdx_}{parIdx}.name; %#ok<AGROW>
                     end
                 end
             end
             
-            if strcmp(style, 'uitable')
+            if strcmp(style, 'uitable') 
                 pos = get(handlers(2), 'Position');
                 numCols = length(get(handlers(2), 'ColumnName')) + 1;
                 pos(3) = numCols * layout.tcWidth + layout.nameTableWidth; 
@@ -150,16 +151,20 @@ function UpdateViewControls()
             end
             
             if vis && strcmp(style, 'edit')
-                % Adjust position and size of the multiline edit control
-                % to fill all available space on the panel
                 min = get(handlers(2), 'Min');
-                max = get(handlers(2), 'Max');                
-                if (max - min) > 1
-                    pos = get(handlers(2), 'Position');
+                max = get(handlers(2), 'Max');
+                pos = get(handlers(2), 'Position');
+                if max - min > 1
+                    if panIdx_ == 1
+                        % Adjust position and size of the multiline edit control
+                        % to fill all available space on the panel
+                        pos(2) = layout.bsHeight + layout.pbHeight + 5 * layout.yMargin0;
+                        pos(4) = yPos - pos(2) + layout.ebHeight - layout.ebYMargin;
+                    else
+                        pos(2) = pos(2) - pos(4) + layout.ebHeight;
+                    end
                     pos(3) = winWidth - pos(1) - layout.sWidth - 2 * layout.xMargin0;
-                    pos(2) = layout.bsHeight + layout.pbHeight + 5 * layout.yMargin0;
-                    pos(4) = yPos - pos(2) + layout.ebHeight - layout.ebYMargin;
-                    set(handlers(2), 'Position', pos);
+                    set(handlers(2), 'Position', pos); 
                     yPos = yPos - pos(4) + layout.ebHeight;
                 end
             end
@@ -169,7 +174,7 @@ function UpdateViewControls()
                 pos = get(handlers(2), 'Position');
                 maxX = winWidth - layout.sWidth - 3 * layout.xMargin0;
                 isTooWide = false;  % if width already fits the panel, height will not be adjusted
-                if (pos(1) + pos(3)) > maxX
+                if pos(1) + pos(3) > maxX
                     pos(3) = maxX - pos(1);
                     isTooWide = true;
                 end
@@ -178,6 +183,12 @@ function UpdateViewControls()
                     pos(2) = minY;
                     pos(4) = yPos + layout.ebHeight - pos(2);
                 end
+                set(handlers(2), 'Position', pos);
+            end
+            
+            if vis && strcmp(style, 'pushbutton')
+                pos = get(handlers(2), 'Position');
+                pos(2) = pos(2) + layout.mspbYMargin;
                 set(handlers(2), 'Position', pos);
             end
             

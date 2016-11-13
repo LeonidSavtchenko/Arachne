@@ -1,16 +1,21 @@
-function valid = evalTextArea(text)
+function valid = evalTextArea(text, varName)
 %% Evaluate custom m-code from the editable text area.
-%  The global struct "customVars" is initialized.
-%  The left-hand argument "valid" equals false if there was an error during the code evaluation, and true otherwise.
+%  Before the evaluation, get the global variable with the given name
+%  so that it can be assigned during evaluation.
 
-    global customVars
+    eval(['global ', varName]);
+    eval([varName, ' = struct;']);
     
-    customVars = struct; % clear customVars before processing
-
+    % Convert the text from cell array to char array,
+    % because "eval" function does not support cell arrays
     [row, ~] = size(text);
     cmd = '';
     for i = 1 : row
-        cmd = sprintf('%s\n%s', cmd, text(i, :));
+        line = text(i, :);
+        if iscell(line)
+            line = line{1};
+        end
+        cmd = sprintf('%s\n%s', cmd, line);
     end
     
     try

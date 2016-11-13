@@ -1,13 +1,13 @@
-function AddCustomCodeTextArea(name, text, desc,   relPred, valPred)
+function AddCustomCodeTextArea(name, text, varName, desc,   relPred, valPred)
 %% Add text area for custom m-code
 
-    if nargin < 4
+    if nargin < 5
         relPred = 'true';
     end
     
     % Make sure that evaluation of the code does not lead to an error
-    valPred_ = sprintf('evalTextArea(%s)', name);
-    if nargin == 5
+    valPred_ = sprintf('evalTextArea(%s, ''%s'')', name, varName);
+    if nargin == 6
         valPred_ = [valPred_, ' && ', valPred];
     end
 
@@ -22,7 +22,7 @@ function AddCustomCodeTextArea(name, text, desc,   relPred, valPred)
     % The control itself
     [handlers(end + 1), ~] = CreateMultiLineEditBox(text, desc, xPos);
     
-    evalTextArea(text);
+    evalTextArea(text, varName);
     
     CommitParam(name, text, relPred, valPred_, handlers, '');
 
@@ -37,7 +37,7 @@ function [hc, xPos] = CreateMultiLineEditBox(text, desc, xPos)
     
     hc = uicontrol('Style', 'edit', ...
                    'Units', 'pixels', ...
-                   'Position', [xPos, 0, layout.ebWidth, layout.taHeight], ...
+                   'Position', [xPos, 0, layout.ebWidth, 1], ...
                    'String', text, ...
                    'UserData', [panIdx, parIdx], ...
                    'BackgroundColor', palette.validColor, ...
@@ -52,7 +52,7 @@ end
 function textArea_callback(hObject, ~)
     
     text = get(hObject, 'String');
-    evalTextArea(text);
+    evalTextArea(text, 'customVars');
     generic_Callback(hObject);
     
 end

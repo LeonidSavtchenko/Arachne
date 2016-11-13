@@ -21,20 +21,21 @@ function Layout()
     layout.yStep = 30;      % Y-step for controls placement
     
     layout.rbHeight = 23;   % Radiobutton height
-    layout.pbWidth = 69;    % Pushbutton width
-    layout.pbHeight = 22;   % Pushbutton height
+    layout.pbWidth = 69;    % Pushbutton width ("Load", "Save", "OK")
+    layout.pbHeight = 22;   % Pushbutton height ("Load", "Save", "OK")
     layout.bsHeight = 2;    % Height of blank strips
     layout.sWidth = 17;     % Slider width
     layout.ebHeight = 23;   % Editbox height
     layout.tHeight = 22;    % Text label height
     layout.cbHeight = 23;   % Checkbox height
     layout.pmHeight = 20;   % Popup menu height
-    layout.taHeight = 150;  % Text area width
     layout.trHeight = 19.1; % Table row height
     layout.tcWidth = 89.3;  % Table column width
+    layout.mptaHeight = 214;    % MOD parameters text area height
    
     layout.ebYMargin = 4;   % Additional space between editbox (checkbox) and controls
     layout.pmYMargin = 7;   % Additional space between popup menu and controls
     layout.tYMargin = 7;    % Additional space between table and controls
+    layout.mspbYMargin = 6; % Additional space between MOD files selector pushbutton and controls
 
 end

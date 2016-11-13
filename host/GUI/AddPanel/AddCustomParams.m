@@ -19,5 +19,5 @@ function AddCustomParams()
             '', ...
             '<b>Incorrect referencing:</b>', ...
             '<pre><font color="red">freqDelay:  n                               [ms]</font></pre>(the variable "n" was not exposed)'};
-    AddCustomCodeTextArea('customCode', text, desc);
+    AddCustomCodeTextArea('customCode', text, 'customVars', desc);
 end

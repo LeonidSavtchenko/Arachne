@@ -15,6 +15,7 @@ function AddAllPanels()
             AddModelTonicParams();
             AddModelStdpParams();
             AddModelXCurParams();
+            AddModelModCurParams();
             AddHpcParams();
             AddRngParams();
             AddKineticParams();

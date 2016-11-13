@@ -26,6 +26,9 @@ function SaveParams(filename)
                 field = 'Value';
             elseif strcmp(style, 'uitable')
                 field = 'Data';
+           elseif strcmp(style, 'pushbutton')
+                % TODO:
+                field = 'String';
             else
                 assert(false);
             end
@@ -37,7 +40,11 @@ function SaveParams(filename)
                 nRows = size(value, 1);
                 str = strtrim(value(1, :));
                 for row = 2 : nRows
-                    str = sprintf('%s\n%s', str, strtrim(value(row, :)));
+                    try
+                        str = sprintf('%s\n%s', str, strtrim(value(row, :)));
+                    catch
+                        % !!
+                    end
                 end
                 value = str; %#ok<NASGU>
             end

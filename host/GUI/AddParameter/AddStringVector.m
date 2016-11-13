@@ -17,7 +17,7 @@ function AddStringVector(name, string, desc,   relPred, valPred)
     [handlers, xPos] = CreateParamNameText(name);
     
     % The control itself
-    [handlers(end + 1), xPos] = CreateParamEditBox(string, xPos, desc);
+    [handlers(end + 1), ~] = CreateParamEditBox(string, xPos, desc);
     
     CommitParam(name, string, relPred, valPred_, handlers, '');
     

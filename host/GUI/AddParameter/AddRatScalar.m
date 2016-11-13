@@ -7,7 +7,7 @@ function AddRatScalar(name, value, unit, desc,   relPred, valPred)
     end
     
     % Extend the validation expression
-    valPred_ = sprintf('isnumeric(%s) && ~isnan(%s) && ~isinf(%s)', name, name, name);
+    valPred_ = sprintf('isnumeric(%s) && ~isnan(%s) && ~isinf(%s) && isreal(%s)', name, name, name, name);
     if nargin == 6
         valPred_ = [valPred_, ' && ', valPred];
     end

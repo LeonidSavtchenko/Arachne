@@ -7,7 +7,7 @@ function AddNumericVector(name, string, unit, desc,   relPred, valPred)
     end
     
     % Extend the validation predicate
-    valPred_ = sprintf('isnumeric(%s) && all(~isnan(%s)) && all(~isinf(%s))', name, name, name);
+    valPred_ = sprintf('isnumeric(%s) && all(~isnan(%s)) && all(~isinf(%s)) && all(isreal(%s))', name, name, name, name);
     if nargin == 6
         valPred_ = [valPred_, ' && ', valPred];
     end

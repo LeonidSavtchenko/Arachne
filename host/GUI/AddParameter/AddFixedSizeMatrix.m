@@ -1,4 +1,5 @@
-function AddFixedSizeMatrix(name, values, rowNames, colNames, desc,  relPred, valPred)
+function AddFixedSizeMatrix(name, values, rowNames, colNames, desc,   relPred, valPred)
+
     global maxLengthName
     global layout
     global panIdx params
