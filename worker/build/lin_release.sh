@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MLDIR="/usr/local/MATLAB/R2011b"
-GSDIR="/home/savtchenko/amcbridge/phase11/gs/worker"
+MLDIR="/usr/local/MATLAB/R2015a"
+GSDIR="/home/savtchenko/amcbridge/phase12/worker"
 
 MLINCLDIR="$MLDIR/extern/include"
 MLBINDIR="$MLDIR/bin/glnxa64"
@@ -12,8 +12,13 @@ ASTRO="$GSDIR/Astro"
 GABA="$GSDIR/GABA"
 STDP="$GSDIR/STDP"
 XCUR="$GSDIR/ExtraCurrent"
+MODCURs="$GSDIR/ModCurrents"
 MATFILEIO="$GSDIR/MatFileIO"
 
 cd ..
 
-mpic++ -fopenmp -std=c++0x -O3 -ffast-math -I$MLINCLDIR -I$GSINCLDIR -L$MLBINDIR -Wl,-rpath=$MLBINDIR -lmat -lmx main.cpp GammaSimulator.cpp DistEnv.cpp DistributionWrapper.cpp BoostedBernoulliDistribution.cpp $MATFILEIO/MatFileIOUtils.cpp MathUtils.cpp OtherFileIOUtils.cpp $CONTAINERS/LocalVector.cpp $CONTAINERS/DistVector.cpp $CONTAINERS/LocalDenseMatrix.cpp $CONTAINERS/LocalSparseMatrix.cpp $CONTAINERS/DistDenseMatrix.cpp $CONTAINERS/DistSparseMatrix.cpp $SCMs/SCMFactory.cpp $SCMs/SCMBase.cpp $SCMs/SimpleSCM.cpp $SCMs/SparseSCM.cpp $SCMs/ZeroSCM.cpp $SCMs/UniformSCM.cpp $SCMs/OneBitSCM.cpp $SCMs/InPlaceSCM.cpp $ASTRO/AstroNet.cpp $GABA/GABA.cpp $STDP/AnalyticStdpMechanism.cpp $STDP/TabulatedStdpMechanism.cpp $STDP/BaseStdpMechanism.cpp $XCUR/ExtraCurrent.cpp -o gs.exe
+mpic++ -fopenmp -std=c++0x -O3 -ffast-math -I$MLINCLDIR -I$GSINCLDIR -L$MLBINDIR -Wl,-rpath=$MLBINDIR -lmat -lmx main.cpp GammaSimulator.cpp DistEnv.cpp DistributionWrapper.cpp BoostedBernoulliDistribution.cpp $MATFILEIO/MatFileIOUtils.cpp MathUtils.cpp OtherFileIOUtils.cpp $CONTAINERS/LocalVector.cpp $CONTAINERS/DistVector.cpp $CONTAINERS/LocalDenseMatrix.cpp $CONTAINERS/LocalSparseMatrix.cpp $CONTAINERS/DistDenseMatrix.cpp $CONTAINERS/DistSparseMatrix.cpp $SCMs/SCMFactory.cpp $SCMs/SCMBase.cpp $SCMs/SimpleSCM.cpp $SCMs/SparseSCM.cpp $SCMs/ZeroSCM.cpp $SCMs/UniformSCM.cpp $SCMs/OneBitSCM.cpp $SCMs/InPlaceSCM.cpp $ASTRO/AstroNet.cpp $GABA/GABA.cpp $STDP/AnalyticStdpMechanism.cpp $STDP/TabulatedStdpMechanism.cpp $STDP/BaseStdpMechanism.cpp $XCUR/ExtraCurrent.cpp $MODCURs/ModCurrentsBase.cpp $MODCURs/AllModCurrents.cpp -o gs.exe
+
+
+
+

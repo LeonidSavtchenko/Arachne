@@ -48,7 +48,7 @@ private:
     const T thinf = (T)-50; 
     const T qinf = (T)4; 
     const T ena = (T)1; 
-    const T celsius = (T)2; 
+    const T celsius = (T)1; 
  
     // STATE 
     T m, h; 

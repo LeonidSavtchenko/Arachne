@@ -14,6 +14,7 @@ set ASTRO="%GSDIR%\Astro"
 set GABA="%GSDIR%\GABA"
 set STDP="%GSDIR%\STDP"
 set XCUR="%GSDIR%\ExtraCurrent"
+set MODCURs="%GSDIR%\ModCurrents"
 set MATFILEIO="%GSDIR%\MatFileIO"
 
 call "%VSDIR%\VC\vcvarsall.bat" amd64

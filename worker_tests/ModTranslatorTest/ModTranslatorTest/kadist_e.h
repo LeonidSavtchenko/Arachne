@@ -47,7 +47,7 @@ private:
     const T qq = (T)5; 
     const T q10 = (T)5; 
     const T qtl = (T)1; 
-    const T ek = (T)2; 
+    const T ek = (T)1; 
  
     // STATE 
     T n, l; 

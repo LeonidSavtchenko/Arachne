@@ -230,6 +230,8 @@
     <ClInclude Include="..\..\Kinetic\tau_n_i.h" />
     <ClInclude Include="..\..\MatFileIO\MatFileIOUtils.h" />
     <ClInclude Include="..\..\MathUtils.h" />
+    <ClInclude Include="..\..\ModCurrents\AllModCurrents.h" />
+    <ClInclude Include="..\..\ModCurrents\ModCurrentsBase.h" />
     <ClInclude Include="..\..\SclModel.h" />
     <ClInclude Include="..\..\OtherFileIOUtils.h" />
     <ClInclude Include="..\..\DistEnv.h" />
@@ -300,6 +302,8 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\MathUtils.cpp" />
+    <ClCompile Include="..\..\ModCurrents\AllModCurrents.cpp" />
+    <ClCompile Include="..\..\ModCurrents\ModCurrentsBase.cpp" />
     <ClCompile Include="..\..\OtherFileIOUtils.cpp" />
     <ClCompile Include="..\..\ComputeSynCoef.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>

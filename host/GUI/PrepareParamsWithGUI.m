@@ -75,7 +75,7 @@ function PrepareParamsWithGUI()
     hpb.ok = uicontrol('Style', 'pushbutton', ...
                        'Units', 'pixels', ...
                        'BackgroundColor', palette.backgroundColor, ...
-                       'Callback', @pushbutton_OK_Callback, ...
+                       'Callback', @pb_OK_Callback, ...
                        'String', 'OK');
     
     hpb.load = uicontrol('Style', 'pushbutton', ...
@@ -130,7 +130,7 @@ function PrepareParamsWithGUI()
     end
     
     if ~useGUI
-        pushbutton_OK_Callback();
+        pb_OK_Callback();
     end
     
 end
@@ -256,55 +256,6 @@ function buttongroup_SelectionChangeFcn_inner()
     % Slider and gray strips
     AdjustSliderAndStrips(true);
     
-end
-
-%%
-function pushbutton_OK_Callback(~, ~)
-
-    global invalidParams hf saveInput2Output
-    global guiType debugMode
-    
-    if ~isempty(invalidParams)
-        msg = ['The following parameters are not valid:', invalidParams];
-        warndlg(msg, 'Invalid parameters');
-        return
-    end
-    
-    % Evaluate all remainders given GUI type
-    if ~debugMode
-        % Show error message only
-        try
-            EvaluateAllRemainders(guiType);
-        catch ex
-            warndlg(ex.message, 'Invalid parameters');
-        end
-    else
-        % Show error message and call stack
-        EvaluateAllRemainders(guiType);
-    end
-    
-    % Translate all the MOD files to C++ source and header files for both "e" and "i" neurons
-    TranslateModFiles();
-    
-    % Save input parameters
-    if saveInput2Output
-        SaveParams('guiParams.mat');
-    end
-        
-    close(hf);
-    
-    [okHandler, stopAfter] = GuiTypeToOkHandler(guiType);
-    
-    okHandler();
-    
-    if stopAfter
-        return
-    end
-      
-    % Grab output MAT-file from remote cluster or HPC kernel directory
-    getFromSnapshot = false;
-    GrabReadAndVisualizeResults(getFromSnapshot);
-
 end
 
 %%

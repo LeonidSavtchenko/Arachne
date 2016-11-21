@@ -31,8 +31,8 @@ private:
  
     // CONST PARAMETERS 
     const T gna = (T)1; 
-    const T gk = (T)2; 
-    const T gca = (T)3; 
+    const T gk = (T)1; 
+    const T gca = (T)1; 
  
     // STATE 
  

@@ -31,7 +31,7 @@ private:
  
     // CONST PARAMETERS 
     const T ek = (T)1; 
-    const T celsius = (T)2; 
+    const T celsius = (T)1; 
     const T gkdrbar = (T).003; 
     const T vhalfn = (T)13; 
     const T a0n = (T)0.02; 

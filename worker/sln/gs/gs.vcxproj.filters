@@ -64,6 +64,12 @@
     <Filter Include="Header Files\GABA">
       <UniqueIdentifier>{20a6d1ce-3c74-4c8c-94e1-16865ab68a43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ModCurrents">
+      <UniqueIdentifier>{779d9184-2b1a-4a66-a2b5-5c994d5da565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModCurrents">
+      <UniqueIdentifier>{777cab2c-cd98-433d-bdf8-d32767e4dcbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -231,6 +237,12 @@
     <ClInclude Include="..\..\GABA\GABA.h">
       <Filter>Header Files\GABA</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ModCurrents\ModCurrentsBase.h">
+      <Filter>Header Files\ModCurrents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ModCurrents\AllModCurrents.h">
+      <Filter>Header Files\ModCurrents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main.cpp">
@@ -379,6 +391,12 @@
     </ClCompile>
     <ClCompile Include="..\..\GABA\GABA.cpp">
       <Filter>Source Files\GABA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ModCurrents\ModCurrentsBase.cpp">
+      <Filter>Source Files\ModCurrents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ModCurrents\AllModCurrents.cpp">
+      <Filter>Source Files\ModCurrents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

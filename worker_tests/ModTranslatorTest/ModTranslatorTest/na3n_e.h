@@ -58,7 +58,7 @@ private:
     const T vvs = (T)2; 
     const T ar = (T)1; 
     const T ena = (T)1; 
-    const T celsius = (T)2; 
+    const T celsius = (T)1; 
  
     // STATE 
     T m, h, s; 

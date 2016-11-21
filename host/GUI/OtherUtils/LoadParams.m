@@ -40,6 +40,8 @@ for panIdx_ = 1 : length(params)
             field = 'Value';
         elseif strcmp(style, 'uitable')
             field = 'Data';
+        elseif strcmp(style, 'pushbutton')
+            field = 'String';
         else
             assert(false);
         end
@@ -56,7 +58,7 @@ for panIdx_ = 1 : length(params)
         params{panIdx_}{parIdx}.value = value;
         
         if controlIsTextArea
-           evalTextArea(value); 
+           evalTextArea(value, params{panIdx_}{parIdx}.name); 
         end
     end
 end
