@@ -8,13 +8,16 @@ ARACHNE is a newly designed simulation environment in which neural network organ
 
 ## Installation. 
 
-There are three versions of the program. Each version has its own characteristics installation.
+There are 4 versions of ARACHNE. Each version has its own parameters of installation.
 
-1. The basic version. Pre-installed kernel in a cluster under Linux and an executable file under  WINDOWS with GNI.
+1. Demo version. Pre-installed kernel in a cluster under Linux and an executable file under  WINDOWS with GNI.
 
-2. The second version. Pre-installed kernel in a cluster under Linux and MatLab files under  WINDOWS. 
+2. MatLab version. Pre-installed kernel in a cluster under Linux and MatLab files under  WINDOWS. 
 
-3. The third version. Open source kernel (C++) and open source local MatLab utility. 
+3. Full version. Open source kernel (C++) and open source local MatLab utility. 
+
+4. Android version. ARACHNE host files for OS Android.
+
 
 ## Examples
 
