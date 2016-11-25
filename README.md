@@ -1,4 +1,4 @@
-<img src="http://www.coloring.ws/greek/arachne3.gif">
+<img src="https://www.dropbox.com/s/96x7dejqeii63s0/arachne3.gif?dl=0">
 # ARACHNE
 Software for the synthesis of realistic neural networks and their numerical processing on remote clusters using parallel computing. 
 
