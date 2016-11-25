@@ -15,11 +15,9 @@ There are three versions of the program. Each version has its own characteristic
 
 3. The third version. Open source kernel (C++) and open source local MatLab utility. 
 
-## To install Arachne:
+## Examples
 
-Examples
-
-Here are five examples showing how Arachne enables the creation and simulation of large-scale neural models.
+There are five files with initial parameters for different configurations of ARACHNE.
 
 Documentation
 
