@@ -1,11 +1,11 @@
 <img src="http://www.coloring.ws/greek/arachne3.gif">
-# Arachne
+# ARACHNE
 Software for the synthesis of realistic neural networks and their numerical processing on remote clusters using parallel computing. 
 
 
 A set of basic input parameters necessary for reproduction plots in the manuscript submitted to Plos
 
-Installation. 
+## Installation. 
 
 There are three versions of the program. Each version has its own characteristics installation.
 
@@ -15,7 +15,7 @@ There are three versions of the program. Each version has its own characteristic
 
 3. The third version. Open source kernel (C++) and open source local MatLab utility. 
 
-To install Arachne:
+## To install Arachne:
 
 Examples
 
