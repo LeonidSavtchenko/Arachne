@@ -3,7 +3,7 @@
 Software for the synthesis of realistic neural networks and their numerical processing on remote clusters using parallel computing. 
 
 
-A set of basic input parameters necessary for reproduction plots in the manuscript submitted to Plos
+
 
 ## Installation. 
 
@@ -17,10 +17,14 @@ There are three versions of the program. Each version has its own characteristic
 
 ## Examples
 
-There are five files with initial parameters for different configurations of ARACHNE.
+There are five files with initial parameters for different configurations of ARACHNE
+https://github.com/LeonidSavtchenko/Arachne/tree/master/ExamplePLOS
+A set of basic input parameters necessary for reproduction plots in the manuscript submitted to Plos
 
-Documentation
+## Documentation
 
 Usage and API documentation can be found a https://github.com/LeonidSavtchenko/Arachne/Instructions.docx
+Manual can be found https://github.com/LeonidSavtchenko/Arachne/Manual.docx
+
 
 
