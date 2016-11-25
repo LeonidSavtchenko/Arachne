@@ -1,4 +1,4 @@
-<img src="http://www.coloring.ws/greek/arachne3.gif">
+<img src="http://www.coloring.ws/greek/arachne3.gif" alt="ARACHNE" height="42" width="42">
 # ARACHNE
 
 ARACHNE is a newly designed simulation environment in which neural network organization, optimization and execution take advantage of the pre-set, optimized parallel algorithms for remote computations and friendly user interface located on a local computer. With this strategy, even amateur is able to integrate the representative variety of biophysical mechanisms pertinent to nerve cells, within a single model in which the network complexity is limited only by the availability of remote computing resources, and not by the modelling kernel or its interface.
