@@ -10,7 +10,7 @@ ARACHNE is a newly designed simulation environment in which neural network organ
 
 There are 4 versions of ARACHNE. Each version has its own parameters of installation.
 
-1. Demo version. Pre-installed kernel in a cluster under Linux and an executable file under  WINDOWS with GNI.
+1. Demo version. Pre-installed kernel in a cluster under Linux and an executable file under  WINDOWS with GUI.
 
 2. MatLab version. Pre-installed kernel in a cluster under Linux and MatLab files under  WINDOWS. 
 
