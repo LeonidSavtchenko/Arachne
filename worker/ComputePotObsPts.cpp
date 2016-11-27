@@ -81,7 +81,7 @@ void GammaSimulator<T, RNGT>::ComputePotObsPts
             if (myRank == MASTER_RANK)
             {
                 phiValue /= (4 * pi * electrolCond);
-                assert(!isNaN(phiValue));
+                //!!assert(!isNaN(phiValue));
             }
             
             MPI_Barrier(MPI_COMM_WORLD);

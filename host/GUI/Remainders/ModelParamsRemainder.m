@@ -16,6 +16,7 @@ function ModelParamsRemainder()
     global size_factor t_start_factor t_end_factor
     global stdpMatrix_ee stdpMatrix_ei stdpMatrix_ii stdpMatrix_ie
     global guiType GuiTypes
+    global DialogIds
     
     % number of iterations:
     m_steps = round(t_final / dt);
@@ -42,7 +43,12 @@ function ModelParamsRemainder()
         
         % Validate parameters of presynaptic voltage history matrices
         if (delta_ee == 0) || (delta_ei == 0) || (delta_ie == 0) || (delta_ii == 0)
-            button = questdlg('The set of model parameters is incorrect. The accuracy can be lost. Do you want to continue?', 'Continue operation', 'Yes', 'No', 'No');
+            button = QuestDlg(...
+                DialogIds.ContinueWithBadParams, ...
+                'The set of model parameters is incorrect. The accuracy can be lost. Do you want to continue?', ...
+                'Continue operation', ...
+                'Yes', 'No', ...
+                'No');
             if strcmp(button, 'Yes')
                 if delta_ee == 0
                     delta_ee = 1;

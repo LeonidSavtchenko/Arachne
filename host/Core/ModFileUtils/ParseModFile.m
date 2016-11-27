@@ -1,13 +1,13 @@
-function blocks = ParseModFile(path)
+function [blocks, freeLocalVars] = ParseModFile(path)
 
-    mod_keywords = {'TITLE', 'NEURON', 'CONSTANT', 'PARAMETER', 'UNITS', 'ASSIGNED', 'STATE', 'BREAKPOINT', 'INITIAL', 'FUNCTION', 'DERIVATIVE', 'PROCEDURE'};
+    mod_keywords = {'TITLE', 'NEURON', 'CONSTANT', 'PARAMETER', 'UNITS', 'ASSIGNED', 'STATE', 'BREAKPOINT', 'INITIAL', 'FUNCTION', 'DERIVATIVE', 'PROCEDURE', 'KINETIC', 'DEFINE'};
  
     mod_file = fopen(path);
     if mod_file == -1
         error('Cannot open file for reading');
     end
 
-    blocks = run_include_preprocessor(path, mod_keywords);
+    blocks = RunIncludePreprocessor(path, mod_keywords);
     
     num_blocks = zeros(size(mod_keywords));
 
@@ -50,7 +50,7 @@ function blocks = ParseModFile(path)
 
                 num_blocks(idx) = num_blocks(idx) + 1;
 
-                rigth_border = -1;
+                rigth_border = 1;
                 len_lines = length(lines);
                 for k = 0 : len_lines - 1
                     if strfind(lines{len_lines - k}, '}')
@@ -66,11 +66,11 @@ function blocks = ParseModFile(path)
                 end
 
                 if strcmp(mod_keywords{idx}, 'PROCEDURE') || strcmp(mod_keywords{idx}, 'FUNCTION')
-                    field = getfield(blocks, mod_keywords{idx});
+                    field = blocks.(mod_keywords{idx});
                     field{num_blocks(idx)} = clean_lines;
-                    blocks = setfield(blocks, mod_keywords{idx}, field);
+                    blocks.(mod_keywords{idx}) = field;
                 else
-                    blocks = setfield(blocks, mod_keywords{idx}, clean_lines);
+                    blocks.(mod_keywords{idx}) = clean_lines;
                 end
                 
             end
@@ -81,25 +81,27 @@ function blocks = ParseModFile(path)
     end   
     fclose(mod_file);
     
+    freeLocalVars = GetFreeLocalVars(path);
+    
 end
 
-function blocks = run_include_preprocessor(path, mod_keywords)
+function blocks = RunIncludePreprocessor(path, mod_keywords)
 
-    mod_file = fopen(path, 'r');
-    if mod_file == -1
+    modFile = fopen(path, 'r');
+    if modFile == -1
         error('Cannot open file for reading');
     end
     
     blocks = struct();
     for idx = 1 : length(mod_keywords)
-        blocks = setfield(blocks, mod_keywords{idx}, {});
+        blocks.(mod_keywords{idx}) = {};
     end
     
     lines = {};
-    while ~feof(mod_file)
+    while ~feof(modFile)
         
-        line = fgetl(mod_file);
-        keywords_idx = -1;
+        line = fgetl(modFile);
+        keywords_idx = -1; %#ok<NASGU>
         if strfind(line, 'INCLUDE')           
             idx = strfind(line, '"');
             left_idx = idx(1) + 1;
@@ -122,7 +124,7 @@ function blocks = run_include_preprocessor(path, mod_keywords)
                 if ~found
                     for idx = 1 : length(mod_keywords)
                         if strfind(line, mod_keywords{idx})
-                            keywords_idx = idx;
+                            keywords_idx = idx; %#ok<NASGU>
                             found = true;
                             break
                         end
@@ -130,21 +132,71 @@ function blocks = run_include_preprocessor(path, mod_keywords)
                 end
                 
                 if found
-                    lines{end + 1, 1} = line;
+                    lines{end + 1, 1} = line; %#ok<AGROW>
                 end
             end 
             
             if strcmp(mod_keywords{idx}, 'PROCEDURE') || strcmp(mod_keywords{idx}, 'FUNCTION')
-                field = getfield(blocks, mod_keywords{idx});
+                field = blocks.(mod_keywords{idx});
                 field{end + 1} = lines;
-                blocks = setfield(blocks, mod_keywords{idx}, field);
+                blocks.(mod_keywords{idx}) = field;
             else
-                blocks = setfield(blocks, mod_keywords{idx}, lines);
+                blocks.(mod_keywords{idx}) = lines;
             end
     
             lines = {};
             fclose(include_file);
         end
     end 
-    fclose(mod_file);
+    fclose(modFile);
+end
+
+function vars = GetFreeLocalVars(path)
+    
+    vars = {};
+    modFile = fopen(path, 'r');
+    if modFile == -1
+        error('Cannot open file for reading');
+    end
+    
+    checksum = 0;
+    isComment = false;
+    while ~feof(modFile)
+
+        line = fgetl(modFile);
+        
+        if strcmp(line, 'COMMENT')
+            isComment = true;
+        elseif strcmp(line, 'ENDCOMMENT')
+            isComment = false;
+            continue;
+        end
+        
+        if isComment
+            continue
+        end
+        
+        leftScope = strfind(line, '{');  
+        if ~isempty(leftScope)
+            checksum =  checksum + length(leftScope);
+        end
+
+        rightScope = strfind(line, '}');
+        if ~isempty(rightScope)
+            checksum =  checksum - length(rightScope);
+        end
+              
+        if checksum == 0 &&  ~isempty(strfind(line, 'LOCAL'));  
+            vars{end + 1, 1} = line; %#ok<AGROW>
+        end    
+    end
+    
+    if isempty(vars)
+        return
+    end
+    
+    for i = 1 : length(vars)
+        tmpStr = strsplit(vars{i}, ':');
+        vars{i} = [strtrim(regexprep(tmpStr{1}, 'LOCAL', 'T')), ';']; %#ok<AGROW>
+    end
 end

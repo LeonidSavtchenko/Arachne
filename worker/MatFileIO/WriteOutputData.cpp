@@ -186,6 +186,18 @@ void GammaSimulator<T, RNGT>::WriteOutputData(const char *outMatFile)
         extraCurrent_i.WriteOutputData(num_steps);
     }
     
+	// Mod currents
+	WriteScalar<bool>(importMod_e, "importMod_e");
+	if (importMod_e)
+	{
+		modCurrent_e.WriteOutputData(num_steps);
+	}
+	WriteScalar<bool>(importMod_i, "importMod_i");
+	if (importMod_i)
+	{
+		modCurrent_i.WriteOutputData(num_steps);
+	}
+
     // Close output MAT-file
     int status = matClose(pOutMatFile);
     if (status != 0)

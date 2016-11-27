@@ -37,7 +37,7 @@ function valid = Validate(modFileNameToUninitParamsNamesStruct, textAreaParamsSt
     numModFilesWithUninitParams = 0;
     for i = 1 : length(modFileNames)
         modFileName = modFileNames{i};
-        uninitParamsNames = getfield(modFileNameToUninitParamsNamesStruct, modFileName); %#ok<GFLD>
+        uninitParamsNames = modFileNameToUninitParamsNamesStruct.(modFileName);
         numUninitParams = length(uninitParamsNames);
         
         if numUninitParams == 0
@@ -52,7 +52,7 @@ function valid = Validate(modFileNameToUninitParamsNamesStruct, textAreaParamsSt
             return
         end
         
-        textAreaParamsForModFile = getfield(textAreaParamsStruct, modFileName); %#ok<GFLD>
+        textAreaParamsForModFile = textAreaParamsStruct.(modFileName);
         
         for j = 1 : numUninitParams
             uninitParamName = uninitParamsNames{j};
@@ -61,7 +61,7 @@ function valid = Validate(modFileNameToUninitParamsNamesStruct, textAreaParamsSt
                 return
             end
             
-            assignedParamValue = getfield(textAreaParamsForModFile, uninitParamName); %#ok<GFLD>
+            assignedParamValue = textAreaParamsForModFile.(uninitParamName);
             
             try
             	valid_ = isnumeric(assignedParamValue) && ~isnan(assignedParamValue) && ~isinf(assignedParamValue) && isreal(assignedParamValue);

@@ -35,24 +35,25 @@ function arr_pars = mod_params_parser(neuronType)
             arr_pars{arr_idx, 1} = pars;
         end   
     end
-         
-    file_names = fieldnames(eval(['modParams_', neuronType]));
-      
-    for i = 1 : length(file_names)
-        pars = struct;
-        pars.filename = file_names{i};
-        var_names = eval(['modParams_', neuronType, '.', file_names{i}]);
-        var_names = fieldnames(var_names);
-        pars.varname = var_names;
-        var_value = cell(length(var_names), 1);
-        for j = 1 : length(var_names)
-            var_value{j} = eval(['modParams_', neuronType, '.', file_names{i}, '.', var_names{j}]);
-        end
+    
+    if ~isempty(eval(['modParams_', neuronType]))
+        file_names = fieldnames(eval(['modParams_', neuronType]));
         
-        pars.varvalue = var_value;
-        arr_idx = arr_idx + 1;
-        arr_pars{arr_idx, 1} = pars; 
-    end
-
+        for i = 1 : length(file_names)
+            pars = struct;
+            pars.filename = file_names{i};
+            var_names = eval(['modParams_', neuronType, '.', file_names{i}]);
+            var_names = fieldnames(var_names);
+            pars.varname = var_names;
+            var_value = cell(length(var_names), 1);
+            for j = 1 : length(var_names)
+                var_value{j} = eval(['modParams_', neuronType, '.', file_names{i}, '.', var_names{j}]);
+            end
+            
+            pars.varvalue = var_value;
+            arr_idx = arr_idx + 1;
+            arr_pars{arr_idx, 1} = pars;
+        end
+    end 
 end
 

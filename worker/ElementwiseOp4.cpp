@@ -14,6 +14,11 @@ void GammaSimulator<T, RNGT>::ElementwiseOperation4()
         extraCurrent_i.DoOneStepPart2(iter, v_i, v_i_tmp);
     }
 
+    if (importMod_i)
+    {
+        //!!modCurrent_i.DoOneStepPart2(iter, v_i, v_i_tmp);
+    }
+
     int myThread = omp_get_thread_num();
     int startIdx = GetThreadChunkStartIdx(v_i_tmp.localLength, myThread);
     int endIdx = GetThreadChunkStartIdx(v_i_tmp.localLength, myThread + 1);
@@ -24,7 +29,7 @@ void GammaSimulator<T, RNGT>::ElementwiseOperation4()
         
         T v_i_inc = T(0.1) * (-65 - v_i_tmp[idx]) + 9 * pow(n_i_tmp[idx], 4) * (-90 - v_i_tmp[idx]) + 35 * pow(m_i_tmp[idx], 3) * h_i_tmp[idx] * (55 - v_i_tmp[idx]) +
             g_e * gts1_i[idx] * delta + gts2_i[idx] * (v_rev_i - v_i_tmp[idx]) +
-            StimInter * I_i[idx] + extraCurrent_i.I[idx] + g_stoch_i * s_stoch_i[idx] * delta + gaba.GTonicGABA * (gaba.VTonicGABA - v_i_tmp[idx]);
+            StimInter * I_i[idx] + extraCurrent_i.I[idx] + modCurrent_i.I[idx] + g_stoch_i * s_stoch_i[idx] * delta + gaba.GTonicGABA * (gaba.VTonicGABA - v_i_tmp[idx]);
         T n_i_inc = (n_i_inf(v_i_tmp[idx]) - n_i_tmp[idx]) / tau_n_i(v_i_tmp[idx]);
         T h_i_inc = (h_i_inf(v_i_tmp[idx]) - h_i_tmp[idx]) / tau_h_i(v_i_tmp[idx]);
         T s_i_inc = T(0.5) * (1 + tanh(v_i_tmp[idx] / 4)) * (1 - s_i_tmp[idx]) / tau_r_i[idx] - s_i_tmp[idx] / tau_d_i[idx];

@@ -128,8 +128,10 @@ function PrepareParamsWithGUI()
     catch
         JFrameNotSupported = true;
     end
-    
-    if ~useGUI
+         
+    if useGUI
+        movegui(hf, 'center');
+    else
         pb_OK_Callback();
     end
     

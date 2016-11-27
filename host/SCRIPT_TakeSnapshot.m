@@ -26,7 +26,7 @@ function SCRIPT_Core()
     isRunning = CheckIfRunning();
     if ~isRunning
         disp('HPC kernel process is not active.');
-        disp('You can launch the script "START_GammaSimulator.m" to grab simulation results.');
+        disp('You can launch the script "START_Arachne.m" to grab simulation results.');
         return
     end
 

@@ -8,7 +8,7 @@ function AddAllPanels()
     % Add all panels except of the Plot panels
     switch guiType
         case GuiTypes.StartFromScratch
-            % START_GammaSimulator -> Start from scratch
+            % START_Arachne -> Start from scratch
             AddCustomParams();
             AddModelParams();
             AddModelAstroParams();
@@ -26,15 +26,15 @@ function AddAllPanels()
             AddMeasuredAstroParams();
             AddMeasuredXCurParams();
         case GuiTypes.ContinueOldSession
-            % START_GammaSimulator -> Continue old session
+            % START_Arachne -> Continue old session
             AddModelAndHpcParamsForContinuation();
             
         case GuiTypes.MonitorBackgroundProcess
-            % START_GammaSimulator -> Monitor background process
+            % START_Arachne -> Monitor background process
             AddHpcParamsForMonitoring();
             
         case GuiTypes.TakeOutputData
-            % START_GammaSimulator -> Take output data
+            % START_Arachne -> Take output data
             AddHpcParamsForTakingOutputData();
             
         case GuiTypes.ScriptTakeSnapshot

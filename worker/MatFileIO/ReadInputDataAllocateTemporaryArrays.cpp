@@ -819,6 +819,12 @@ void GammaSimulator<T, RNGT>::ReadInputDataAllocateTemporaryArrays()
     enableExtraCurrent_i = ReadCheckBroadcastScalar<bool>("enableExtraCurrent_i");
     extraCurrent_e = ExtraCurrent<T, RNGT>('e', dt, continuationMode, enableExtraCurrent_e, num_e, v_e, m_steps_prev, m_steps);
     extraCurrent_i = ExtraCurrent<T, RNGT>('i', dt, continuationMode, enableExtraCurrent_i, num_i, v_i, m_steps_prev, m_steps);
+
+	// Mod currents
+	importMod_e = ReadCheckBroadcastScalar<bool>("importMod_e");
+	importMod_i = ReadCheckBroadcastScalar<bool>("importMod_i");
+	modCurrent_e = ModCurrent<T>('e', dt, continuationMode, enableExtraCurrent_e, num_e, v_e, m_steps_prev, m_steps);
+	modCurrent_i = ModCurrent<T>('i', dt, continuationMode, enableExtraCurrent_i, num_i, v_i, m_steps_prev, m_steps);
 }
 
 template <typename T, typename RNGT>

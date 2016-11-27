@@ -12,10 +12,16 @@ function line = TranslateLineOfCode(line)
     substr = line(1 : firstColonIdx - 1);
     
     % Replace all "^" operators with "pow" function calls
-    substr = ReplaceCaretsWithPows(substr);
+    %substr = ReplaceCaretsWithPows(substr);
+    
+    % Maybe it's a temporary solution %!!!
+    substr = ReplaceToPow(substr);
     
     % Add "(T)" in front of all numbers
     substr = AddCastOfNumbersToT(substr);
+    
+    % Revert "(T)" in square brackets "[]"
+    substr = RevertCastOfNumbersToT(substr);
     
     % Restore the comment
     line = [substr, line(firstColonIdx : end)];
@@ -272,3 +278,138 @@ function line = AddCastOfNumbersToT(line)
     line = regexprep(line, errorInExponent, subst);
     
 end
+
+function line = RevertCastOfNumbersToT(line)
+%% Revert "(T)" in square brackets "[]"
+    
+    rightBracketIdx = strfind(line, ']');
+    
+    if isempty(rightBracketIdx)
+        return
+    end
+    
+    if length(rightBracketIdx) == 1
+        leftBracketIdx = strfind(line, '[');
+        assert(~isempty(leftBracketIdx), 'Failed to find the left bracket "["');
+        leftBracketIdx = leftBracketIdx(1);
+        
+        if leftBracketIdx == 1
+            leftSubLine = '';
+        else
+           leftSubLine = line(1 : leftBracketIdx - 1);
+        end
+        
+        centerSubLine = regexprep(line(leftBracketIdx : rightBracketIdx), '\(T\)', '');
+        
+        if rightBracketIdx == length(line)
+            rightSubLine = '';
+        else
+           rightSubLine = line(rightBracketIdx + 1 : end);
+        end
+        
+        line = [leftSubLine, centerSubLine, rightSubLine];
+        
+    else
+        rightBracketIdx = rightBracketIdx(1);
+        headLine = line(1 : rightBracketIdx);
+        tailLine = line(rightBracketIdx + 1 : end);
+        
+        leftBracketIdx = strfind(headLine, '[');
+        assert(~isempty(leftBracketIdx), 'Failed to find the left bracket "["');
+        leftBracketIdx = leftBracketIdx(end);
+        
+        if leftBracketIdx == 1
+            newHead = regexprep(headLine(leftBracketIdx : end), '\(T\)', '');
+        else
+            newHead = [headLine(1 : leftBracketIdx - 1), ...
+                regexprep(headLine(leftBracketIdx : end), '\(T\)', '')];
+        end
+        
+        line = [newHead, RevertCastOfNumbersToT(tailLine)];
+    end
+end
+
+function line = ReplaceToPow(line)
+    
+    while strfind(line, '^')
+        line = FirstReplaceToPow(line);
+    end
+end
+
+function line = FirstReplaceToPow(line)
+    
+    keyWords = '=+-*/';
+    
+    idx = strfind(line, '^');
+    idx = idx(1);
+    
+    leftPos = -1;
+    leftScopeSum = 0;
+    rightScopeSum = 0;
+    for i = 1 : idx - 1
+        cChar = line(idx - i);
+        if cChar == ')'
+            rightScopeSum = rightScopeSum + 1;
+        elseif cChar == '('
+            leftScopeSum = leftScopeSum + 1;
+            if leftScopeSum == rightScopeSum 
+                leftPos = idx - i;
+                break 
+            elseif rightScopeSum == 0
+                leftPos = idx - i + 1;
+                break 
+            end
+        elseif leftScopeSum == rightScopeSum && ~isempty(strfind(keyWords, cChar))
+            leftPos = idx - i + 1;
+            break
+        elseif i == idx - 1
+            leftPos = 1;
+        end
+    end
+    
+    assert(leftPos > 0, 'Bad "leftPos" index');
+    leftArg = line(leftPos : idx - 1);
+    
+    lenLine = length(line);
+    rightPos = -1;
+    leftScopeSum = 0;
+    rightScopeSum = 0;
+    for i = idx + 1 : lenLine
+        cChar = line(i);
+        if cChar == '('
+            leftScopeSum = leftScopeSum + 1;
+        elseif cChar == ')'  
+            rightScopeSum = rightScopeSum + 1;
+            if leftScopeSum == rightScopeSum
+                rightPos = i;
+                break
+            elseif leftScopeSum == 0
+                rightPos = i - 1;
+                break
+            end
+          
+        elseif leftScopeSum == rightScopeSum && ~isempty(strfind(keyWords, cChar))
+            rightPos = i - 1;
+            break
+        elseif i == lenLine
+            rightPos = lenLine;
+        end
+    end
+    
+    assert(rightPos <= lenLine, 'Bad "rightPos" index');
+    rightArg = line(idx + 1 : rightPos);
+    
+    leftSubLine = '';
+    if leftPos > 1
+        leftSubLine = line(1 : leftPos - 1);
+    end
+    
+    rightSubLine = '';
+    if rightPos < lenLine
+        rightSubLine = line(rightPos + 1 : end);
+    end
+    
+    line = [leftSubLine, 'pow(', leftArg, ', ', rightArg, ')', rightSubLine];   
+end
+
+

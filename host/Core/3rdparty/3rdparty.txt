@@ -1,4 +1,4 @@
-Gamma simulator uses some 3rd party applications and source code as listed below:
+Arachne uses some 3rd party applications and source code as listed below:
 
 Application                             Downloaded from
 host\Core\3rdparty\plink.exe            http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html

@@ -14,6 +14,11 @@ void GammaSimulator<T, RNGT>::ElementwiseOperation1()
         extraCurrent_e.DoOneStepPart1(v_e);
     }
 
+    if (importMod_e)
+    {
+        //!!modCurrent_e.DoOneStepPart1(v_e);
+    }
+
     int myThread = omp_get_thread_num();
     int startIdx = GetThreadChunkStartIdx(v_e.localLength, myThread);
     int endIdx = GetThreadChunkStartIdx(v_e.localLength, myThread + 1);
@@ -25,7 +30,7 @@ void GammaSimulator<T, RNGT>::ElementwiseOperation1()
         // !! TODO: Fix units inconsistency between v_e_inc and I_e
         T v_e_inc = T(0.1) * (-67 - v_e[idx]) + 80 * pow(n_e[idx], 4) * (-100 - v_e[idx]) + 100 * pow(m_e[idx], 3) * h_e[idx] * (50 - v_e[idx]) +
             gts1_e[idx] * delta + gts2_e[idx] * (gaba.DeltaVGABA + v_rev_i - v_e[idx]) + imageDrive[idx] +
-            I_e[idx] + extraCurrent_e.I[idx] + g_stoch_e * s_stoch_e[idx] * delta + gaba.AlphaTonic * gaba.GTonicGABA * (gaba.DeltaVGABA + gaba.VTonicGABA - v_e[idx]);
+            I_e[idx] + extraCurrent_e.I[idx] + modCurrent_e.I[idx] + g_stoch_e * s_stoch_e[idx] * delta + gaba.AlphaTonic * gaba.GTonicGABA * (gaba.DeltaVGABA + gaba.VTonicGABA - v_e[idx]);
         T n_e_inc = (n_e_inf(v_e[idx]) - n_e[idx]) / tau_n_e(v_e[idx]);
         T h_e_inc = (h_e_inf(v_e[idx]) - h_e[idx]) / tau_h_e(v_e[idx]);
         T s_e_inc = T(0.5) * (1 + tanh(v_e[idx] / 4)) * (1 - s_e[idx]) / tau_r_e[idx] - s_e[idx] / tau_d_e[idx];

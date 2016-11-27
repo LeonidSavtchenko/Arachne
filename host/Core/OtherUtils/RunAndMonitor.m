@@ -3,7 +3,7 @@ function RunAndMonitor()
     global remoteHPC scalTest continuationMode imageMode recallMode backgroundMode
     global guiType GuiTypes
     global image %#ok<NUSED>
-    
+    global DialogIds
     
     %% Image external drive input
     if imageMode
@@ -19,7 +19,12 @@ function RunAndMonitor()
     elseif imageMode
         choice = '';
         while isempty(choice)
-            choice = questdlg('Should gamma simulator memorize or recall this image?', 'STDP ON/OFF option', 'Memorize', 'Recall', 'Memorize');
+            choice = QuestDlg(...
+                DialogIds.MemorizeOrRecall, ...
+                'Should gamma simulator memorize or recall this image?', ...
+                'STDP ON/OFF option', ...
+                'Memorize', 'Recall', ...
+                'Memorize');
         end
         recallMode = strcmp(choice, 'Recall');
     else

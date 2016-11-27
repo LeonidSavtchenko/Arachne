@@ -2,21 +2,20 @@ function params = ParseAssignedBlock(scope)
 
     params = {};
 
-    for i = 1 : length(scope)
-
-        if ~(~isempty(scope{i}) && isempty(strfind(scope{i}, '{')) && isempty(strfind(scope{i}, '}')))
+    for i = 1 : length(scope)      
+        tmpStr = scope{i};
+        if ~(~isempty(tmpStr) && isempty(strfind(tmpStr, '{')) && isempty(strfind(tmpStr, '}')))
             continue
         end
+        
+        tmpStr = strsplit(tmpStr, ':');
+        tmpStr = tmpStr{1};
+        splitTmpStr = strsplit(regexprep(tmpStr, '\(\S*\)', ''));
 
-        tmpStr = strsplit(regexprep(scope{i}, '\(\S*\)', ''));
-
-        for j = 1 : length(tmpStr)
-
-            if isempty(tmpStr{j})
-                continue
-                % variable 'v' (voltage) we process separately
-            elseif ~strcmp(tmpStr{j}, 'v')
-                params{end + 1, 1} = tmpStr{j};
+        for j = 1 : length(splitTmpStr)           
+            cStr = splitTmpStr{j};
+            if ~(isempty(cStr) || strcmp(cStr, 'v'))
+                 params{end + 1, 1} = cStr; %#ok<AGROW>
             end
         end
     end

@@ -1,11 +1,21 @@
 function BUILD_AllHostExecutables()
-%% Compile 8 executable files for all the entry points of the host.
-%  Copy all dependent non-M files to the target directory. 
+%% Compile executable files for all the entry points of the host.
+%  Copy all dependent non-M files to the target directory.
+%  Create a readme file.
+%  Prepare ZIP archive.
 
+    % Whether to make Matlab compiler verbose
+    beVerbose = false;
+
+    tic;
+    
     AddPaths();
     
+    outDirName = 'host_compiled';
+    tempSubDirName = 'temp';
+    
     % Create a new or clean up the existing target directory
-    outDirPath = fullfile(cd, '..', 'host_compiled');
+    outDirPath = fullfile(cd, '..', outDirName);
     PrepareEmptyDir(outDirPath);
     
     % Copy all dependent non-M files to the target directory
@@ -13,7 +23,7 @@ function BUILD_AllHostExecutables()
     disp('Copying non-M files ...');
     
     srcDir = fullfile(cd, 'Core');
-    dstDir = fullfile(cd, '..', 'host_compiled', 'Core');
+    dstDir = fullfile(cd, '..', outDirName, tempSubDirName, 'Core');
     
     if ispc
         CopyOneDir(dstDir, srcDir, '3rdparty');
@@ -27,10 +37,11 @@ function BUILD_AllHostExecutables()
     
     CopyOneDir(dstDir, srcDir, 'ModFileUtils', 'CppCodeTemplates');
     
-    % Compile all the scripts
+    % Compile all the the entry points
 
     scriptNames = {
-        'START_GammaSimulator', ...
+        'START_Arachne', ...
+        'START_MOBILE_Arachne', ...
         'SCRIPT_CleanUp', ...
         'SCRIPT_KillBackgroundProcess', ...
         'SCRIPT_RecoverBackupProgress', ...
@@ -39,13 +50,39 @@ function BUILD_AllHostExecutables()
         'UTILITY_ComputeMaxModelSize', ...
         'UTILITY_PlotStdpModels'};
     
+    disp('Compiling executables ...');
+    tempSubDirPath = fullfile(outDirPath, tempSubDirName);
     for i = 1 : length(scriptNames)
-        CompileOneExecutable(scriptNames{i});
+        CompileOneExecutable(scriptNames{i}, tempSubDirPath, beVerbose);
     end
+    
+    % Create a readme file
+    readmePath = fullfile(tempSubDirPath, 'readme.txt');
+    fid = fopen(readmePath, 'w');
+    assert(fid ~= -1);
+    text = [
+        'These executables were compiled in MATLAB version ', version, '.\r\n', ...
+        'To run them on a machine where this version of MATLAB is not installed, ' ...
+        'you have to install corresponding version of MATLAB Runtime.\r\n', ...
+        'It is a free package that can be downloaded from the next webpage:\r\n', ...
+        '\r\n', ...
+        '    https://www.mathworks.com/products/compiler/mcr/', ...
+        '\r\n'];
+    fprintf(fid, text);
+    fclose(fid);
+    
+    % Create ZIP archive, then delete the temporary subdirectory
+    assert(ispc);
+    command = ['call Core\scripts\win-win\zip_compiled_bins.bat ', tempSubDirPath];
+    system(command);
+    
+    toc
     
 end
 
+    
 function CopyOneDir(dstDir, srcDir, varargin)
+%% Copy one directory
 
     copyfile(...
         fullfile(srcDir, varargin{:}), ...
@@ -54,47 +91,28 @@ function CopyOneDir(dstDir, srcDir, varargin)
 
 end
 
-function CompileOneExecutable(scriptName)
+
+function CompileOneExecutable(scriptName, outDir, beVerbose)
+%% Compile one executable file
+
+    disp(['    Compiling ', scriptName, '.exe ...']);
     
-    disp(['Compiling executable for ', scriptName, ' ...']);
+    % Prepare arguments for Matlab compiler.
+    % Remark: We force "mcc" compile all the m-files in some directories,
+    %         because otherwise it skips compilation of the functions
+    %         which are not called explicitly anywhere.
+    %         For example, some validation predicates are called only implicitly via "eval" function,
+    %         and this results in runtime errors of type "Undefined function"
+    %         if we do not point compiler to them with '-a' argument.
+    attachDir1 = fullfile(cd, 'Core', 'InputDataUtils');
+    attachDir2 = fullfile(cd, 'GUI', 'ValidationPredicates');
+    mainFileName = [scriptName, '.m'];
+    args = {'-m', '-d', outDir, '-a', attachDir1, '-a', attachDir2, mainFileName};
+    if beVerbose
+        args = ['-v', args];
+    end
     
-    % Output name for executable file
-    outName = ['-o', ' ', scriptName];
-
-    % Wrapper functions. For console application we need to use "main"
-    wrapperFunc = ['-W main:', scriptName];
-
-    % Link object files into a stand-alone executable
-    linkParam = '-T link:exe';
-
-    % Output directory. All generated files will be put in this directory
-    outDirectory = ['-d', ' ', fullfile(cd, '..', 'host_compiled')];
-
-    % Show compilation steps
-    compInfo = '-v';
-    
-    % Do not embed the deployable archive in binaries
-    deployBin = '-C';
-    
-    % Path to main M-file
-    pathToMainFile = fullfile(cd, [scriptName, '.m']);
-
-    % Attach directory
-    attachDirectory = cd;
-    idx = strfind(attachDirectory, filesep);
-    attachDirectory = attachDirectory(1 : idx(end) - 1);
-    attachDirectory = ['-a', ' ', attachDirectory];
-
-    command = [...
-        'mcc', ' ', ...
-        outName, ' ', wrapperFunc, ' ', ...
-        linkParam, ' ', outDirectory, ' ', ...
-        compInfo, ' ', deployBin, ' ', ...
-        pathToMainFile, ' ', attachDirectory];
-
-    % !!
-    % command = ['mcc', ' ', scriptName, '.m -m'];
-    
-    eval(command);
+    % Run the compiler
+    mcc(args{:});
     
 end

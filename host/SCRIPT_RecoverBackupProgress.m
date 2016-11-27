@@ -23,9 +23,9 @@ function SCRIPT_RecoverBackupProgress()
     
     disp('Recovery complete.');
     if ~status
-        disp('Now you can launch the script "START_GammaSimulator.m" to grab simulation results or continue simulation from the backup point.');
+        disp('Now you can launch the script "START_Arachne.m" to grab simulation results or continue simulation from the backup point.');
     else
-        disp('Now you can launch the script "START_GammaSimulator.m" to grab simulation results.');
+        disp('Now you can launch the script "START_Arachne.m" to grab simulation results.');
     end
 
 end

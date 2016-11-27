@@ -20,10 +20,10 @@ function [modFileNames, modFileNamesWithUninitParams, modFileNameToUninitParamsN
         [~, fileName, ~] = fileparts(filePath);
         
         % Update modFileNameToUninitParamsNamesStruct
-        modFileNameToUninitParamsNamesStruct = setfield(modFileNameToUninitParamsNamesStruct, fileName, {}); %#ok<SFLD>
+        modFileNameToUninitParamsNamesStruct.(fileName) = {};
                     
         % Parse the file
-        blocks = ParseModFile(modFilePaths{i});
+        [blocks, ~] = ParseModFile(modFilePaths{i});
 
         % Parse "PARAMETER" block
         params = ParseParameterBlock(blocks.PARAMETER);
@@ -52,9 +52,9 @@ function [modFileNames, modFileNamesWithUninitParams, modFileNameToUninitParamsN
                 % Update textAreaPrompt
                 textAreaPrompt{end + 1, 1} = sprintf('modParams_%s.%s.%s = nan;', neuronType, fileName, paramName); %#ok<AGROW>
                 % Update modFileNameToUninitParamsNamesStruct
-                uninitParams = getfield(modFileNameToUninitParamsNamesStruct, fileName); %#ok<GFLD>
+                uninitParams = modFileNameToUninitParamsNamesStruct.(fileName);
                 uninitParams{end + 1, 1} = paramName; %#ok<AGROW>
-                modFileNameToUninitParamsNamesStruct = setfield(modFileNameToUninitParamsNamesStruct, fileName, uninitParams); %#ok<SFLD>
+                modFileNameToUninitParamsNamesStruct.(fileName) = uninitParams;
             end
         end
         

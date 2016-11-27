@@ -1,5 +1,7 @@
 function scenario = SelectScenario()
 
+    global QuestionIds mobileMode
+    
     % Input:
     global remoteHPC scalTest
     
@@ -55,29 +57,35 @@ function scenario = SelectScenario()
             verb = 'Take';
         end
 
-        % Prepare invitation hint for user input
+        % Prepare invitation prompt for user input
         if isIntermPresent
             disp('It is.');
-            hint = [...
+            prompt = [...
                 '1. ', verb , ' "output.mat" and analyse results.\n', ...
                 '2. Start simulation from scratch (current files "output.mat" and "intermediate.mat" will be lost).\n', ...
                 '3. Continue simulation from the same point.\n', ...
                 '[1, 2 or 3]: '];
         else
             disp('It is not.');
-            hint = [...
+            prompt = [...
                 '1. ', verb , ' "output.mat" and analyse results.\n', ...
                 '2. Start simulation from scratch (current file "output.mat" will be lost).\n', ...
                 '[1 or 2]: '];
         end
-        hint = ['\nPlease specify what to do:\n', hint];
+        prompt = ['\nPlease specify what to do:\n', prompt];
 
         % Loop until user inputs correct data
+        questionId = QuestionIds.WhatToDo;
         while true
-            reply = input(hint, 's');
+            reply = Input(questionId, prompt);
             if strcmp(reply, '1') || strcmp(reply, '2') || (isIntermPresent && strcmp(reply, '3'))
                 fprintf('\n');
                 break
+            end
+            if mobileMode
+                % Prevent infinite loop
+                fieldName = GetFieldName(QuestionIds, questionId);
+                error('The input struct passed to Arachne has the following incorrect field: ''%s''.', fieldName);
             end
         end
 
@@ -92,10 +100,11 @@ function scenario = SelectScenario()
         end
 
         if continuationMode
-            hint = 'Please specify the additional period to simulate (e.g. "1234.5 ms" or "12345 it"): ';
+            prompt = 'Please specify the additional period to simulate (e.g. "1234.5 ms" or "12345 it"): ';
             % Loop until user inputs correct data
+            questionId = QuestionIds.AdditionalPeriod;
             while true
-                reply2 = input(hint, 's');
+                reply2 = Input(questionId, prompt);
                 if length(reply2) < 4
                     continue
                 end
@@ -114,6 +123,11 @@ function scenario = SelectScenario()
                     fprintf('\n');
                     break
                 end
+                if mobileMode
+                    % Prevent infinite loop
+                    fieldName = GetFieldName(QuestionIds, questionId);
+                    error('The input struct passed to Arachne has the following incorrect field: ''%s''.', fieldName);
+                end
             end
         end
     else
@@ -121,20 +135,26 @@ function scenario = SelectScenario()
 
         fprintf('It is not.\n');
 
-        hint = [...
+        prompt = [...
             '\nPlease specify what to do:\n', ...
             '1. Start simulation from scratch (current backup files will be lost).\n', ...
             '2. Do nothing.\n', ...
             '[1 or 2]: '];
 
         % Loop until user inputs correct data
+        questionId = QuestionIds.WhatToDo;
         while true
-            reply = input(hint, 's');
+            reply = Input(questionId, prompt);
             if strcmp(reply, '1')
                 break
             elseif strcmp(reply, '2')
                 scenario = Scenarios.DoNothing;
                 return
+            end
+            if mobileMode
+                % Prevent infinite loop
+                fieldName = GetFieldName(QuestionIds, questionId);
+                error('The input struct passed to Arachne has the following incorrect field: ''%s''.', fieldName);
             end
         end
 

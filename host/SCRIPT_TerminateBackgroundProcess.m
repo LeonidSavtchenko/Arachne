@@ -35,7 +35,7 @@ function SCRIPT_TerminateBackgroundProcess()
         isRunning = CheckIfRunning();
         if ~isRunning
             disp('HPC kernel has terminated.');
-            disp('Now you can launch the script "START_GammaSimulator.m" to grab simulation results or continue simulation from the same point (if parameter "saveIntermMat" was specified as True).');
+            disp('Now you can launch the script "START_Arachne.m" to grab simulation results or continue simulation from the same point (if parameter "saveIntermMat" was specified as True).');
             break
         else
             disp('HPC kernel has not terminated yet ...');

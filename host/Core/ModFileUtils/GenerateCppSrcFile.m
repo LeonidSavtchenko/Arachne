@@ -30,88 +30,149 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
 
         elseif strfind(tline, '%INIT_CURRENTS')
 
-            assigned_params = ParseAssignedBlock(parameters_blocks.ASSIGNED);
-            parameter_params = ParseParameterBlock(parameters_blocks.PARAMETER);
+            assignedParams = ParseAssignedBlock(parameters_blocks.ASSIGNED);
+            parameterParams = ParseParameterBlock(parameters_blocks.PARAMETER);
 
-            not_init_params = {};
+            notInitParams = {};
 
-            for i = 1 : length(parameter_params)
-                curr_str = parameter_params{i};
+            for i = 1 : length(parameterParams)
+                currStr = parameterParams{i};
 
-                if isempty(strfind(curr_str, '='))
+                if isempty(strfind(currStr, '='))
                     continue
                 end
 
-                if curr_str(1) == 'i'
-                    not_init_params{end + 1, 1} = parameter_params{i}; %#ok<AGROW>
+                if currStr(1) == 'i'
+                    notInitParams{end + 1, 1} = parameterParams{i}; %#ok<AGROW>
                 end
             end
 
-            current_params = {};
+            currentParams = {};
 
-            if isempty(not_init_params)
-                for j = 1 : length(assigned_params)
-                    curr_str = assigned_params{j};
-                    if curr_str(1) == 'i'
-                    	current_params{end + 1, 1} = curr_str;
+            if isempty(notInitParams)
+                for j = 1 : length(assignedParams)
+                    currStr = assignedParams{j};
+                    if currStr(1) == 'i'
+                    	currentParams{end + 1, 1} = currStr; %#ok<AGROW>
                     end
                 end
             else
-                for i = 1 : length(not_init_params)
-                    for j = 1 : length(assigned_params)
-
-                        if ~strcmp(not_init_params{i}, assigned_params{j})
-                            current_params{end + 1, 1} = assigned_params{j};
+                for i = 1 : length(notInitParams)
+                    for j = 1 : length(assignedParams)
+                        if ~strcmp(notInitParams{i}, assignedParams{j})
+                            currentParams{end + 1, 1} = assignedParams{j}; %#ok<AGROW>
                         end
-
                     end
                 end
             end
             
-            for i = 1 : length(current_params)
-                cppFile{end + 1, 1} = ['    this->_currents[', int2str(i - 1), '] = &', current_params{i}, ';']; %#ok<AGROW>
+            countCurrents = -1;
+            for i = 1 : length(currentParams)
+                if isempty(strfind(currentParams{i}, '['))
+                    countCurrents = countCurrents + 1;
+                    cppFile{end + 1, 1} = ...
+                        ['this->_currents[', int2str(countCurrents), '] = &', currentParams{i}, ';']; %#ok<AGROW>
+                end
             end
 
         elseif strfind(tline, '%INIT_STATES')
 
             scope = parameters_blocks.STATE;
             if ~isempty(scope)
-                state_params = ParseStateBlock(scope);
+                stateParams = ParseStateBlock(scope);
 
-                if ~isempty(state_params)
-                    cppFile{end + 1, 1} = '    this->_states = std::vector<T*>(_numStates);'; %#ok<AGROW>
+                if ~isempty(stateParams)
+                    cppFile{end + 1, 1} = 'this->_states = std::vector<T*>(_numStates);'; %#ok<AGROW>
                 end
-                
-                for i = 1 : length(state_params)
-                    cppFile{end + 1, 1} = ['    this->_states[', int2str(i - 1), '] = &', state_params{i}, ';']; %#ok<AGROW>
+                 countStates = -1;
+                for i = 1 : length(stateParams)
+                     if isempty(strfind(stateParams{i}, '['))
+                         countStates = countStates + 1;
+                         cppFile{end + 1, 1} = ...
+                             ['this->_states[', int2str(countStates), '] = &', stateParams{i}, ';']; %#ok<AGROW>
+                     end
                 end
             end
             
         elseif strfind(tline, '%INIT_DERIVATIVES')
-
+            
             scope = parameters_blocks.STATE;
             if ~isempty(scope)
-                state_params = ParseStateBlock(scope);
+                stateParams = ParseStateBlock(scope);
                 
-                if ~isempty(state_params)
-                    cppFile{end + 1, 1} = '    this->_derivatives = std::vector<T*>(_numStates);'; %#ok<AGROW>
+                if ~isempty(stateParams)
+                    cppFile{end + 1, 1} = 'this->_derivatives = std::vector<T*>(_numStates);'; %#ok<AGROW>
                 end
-                
-                for i = 1 : length(state_params)
-                    cppFile{end + 1, 1} = ['    this->_derivatives[', int2str(i - 1), '] = &', state_params{i}, '_rhp;']; %#ok<AGROW>
+                countStates = -1;
+                for i = 1 : length(stateParams)
+                    if isempty(strfind(stateParams{i}, '['))
+                        countStates = countStates + 1;
+                        cppFile{end + 1, 1} = ...
+                            ['this->_derivatives[', int2str(countStates), '] = &', stateParams{i}, '_rhp;']; %#ok<AGROW>
+                    end
                 end
             end
-
+            
         elseif strfind(tline, '%INITIAL_SIGNATURE')
 
             cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::init()']; %#ok<AGROW>
 
         elseif strfind(tline, '%INITIAL_BODY')
-
+            
             params = parameters_blocks.INITIAL;
-
-            for i = 2 : length(params) - 1
-                cppFile{end + 1, 1} = ['    ', regexprep(params{i}, '\s*', ''), ';']; %#ok<AGROW>
+            
+            i = 1;
+            while i <= length(params)
+                
+                cStr = strtrim(params{i});
+                
+                if strfind(cStr, 'INITIAL')
+                    cppFile{end + 1, 1} = '{'; %#ok<AGROW>
+                    i = i + 1;
+                    
+                elseif strcmp(cStr, 'VERBATIM')
+          
+                    i = i + 1;
+                    cStr = strtrim(params{i});
+                    
+                    while ~strcmp(cStr, 'ENDVERBATIM')
+                        cppFile{end + 1, 1} = cStr; %#ok<AGROW>
+                        i = i + 1;
+                        cStr = strtrim(params{i});
+                    end
+                    i = i + 1;
+                else
+                    cStr = strsplit(cStr, ':');
+                    cStr = strtrim(cStr{1});
+                    cStr = TranslateLineOfCode(cStr);
+                    
+                    if isempty(cStr)
+                        cppFile{end + 1, 1} =''; %#ok<AGROW>
+                    elseif strfind(cStr, 'LOCAL')
+                        cppFile{end + 1, 1} = [regexprep(cStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
+                        
+                    elseif strfind(cStr, 'FROM')
+                        
+                        cppFile{end + 1, 1} = ParsForSycleHdr(cStr); %#ok<AGROW>
+                        
+                    elseif strfind(cStr, '=')
+                        if cStr(end) == '}'
+                            cppFile{end + 1, 1} = [cStr(1 : end - 1), ';}']; %#ok<AGROW>
+                        elseif cStr(end) == '{'
+                            cppFile{end + 1, 1} = cStr; %#ok<AGROW>   
+                        else
+                            cppFile{end + 1, 1} = [cStr, ';']; %#ok<AGROW>
+                        end
+                    else
+                        if cStr(end) == ')'
+                            cppFile{end + 1, 1} = [cStr, ';']; %#ok<AGROW>
+                        else
+                            cppFile{end + 1, 1} = cStr; %#ok<AGROW>
+                        end
+                    end
+                    
+                    i = i + 1; 
+                end
             end
 
         elseif strfind(tline, '%BREAKPOINT_SIGNATURE')
@@ -121,13 +182,39 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
         elseif strfind(tline, '%BREAKPOINT_BODY')
 
             params = parameters_blocks.BREAKPOINT;
-
-            for i = 1 : length(params)
-                if strfind(params{i}, '=')
-                    cppFile{end + 1, 1} = ['    ', regexprep(params{i}, '\s*', ''), ';']; %#ok<AGROW>
+            
+            i = 1;
+            while i <= length(params)
+                
+                cStr = strtrim(params{i});
+                
+                if strfind(cStr, 'BREAKPOINT') 
+                    cppFile{end + 1, 1} = '{'; %#ok<AGROW>
+                    i = i + 1;
+                elseif isempty(cStr) || ~isempty(strfind(cStr, 'SOLVE')) || strcmp(cStr(1), ':')
+                    i = i + 1;
+                    continue
+                elseif strfind(cStr, 'LOCAL')
+                    i = i + 1;
+                    cppFile{end + 1, 1} = [regexprep(cStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
+                elseif strcmp(cStr, 'VERBATIM')
+                    i = i + 1; 
+                    cStr = strtrim(params{i});
+                           
+                    while ~strcmp(cStr, 'ENDVERBATIM')
+                        cppFile{end + 1, 1} = cStr; %#ok<AGROW>
+                         i = i + 1; 
+                         cStr = strtrim(params{i});
+                    end               
+                    i = i + 1; 
+                elseif strfind(cStr, '=')
+                    i = i + 1;
+                    cppFile{end + 1, 1} = [cStr, ';']; %#ok<AGROW>
+                else
+                    i = i + 1;
+                    cppFile{end + 1, 1} = cStr; %#ok<AGROW>
                 end
             end
-
         elseif strfind(tline, '%DERIVATIVE_SIGNATURE')
 
             cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::states()']; %#ok<AGROW>
@@ -154,49 +241,115 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
 
                 cppFile{end + 1, 1} = ''; %#ok<AGROW>
                 cppFile{end + 1, 1} = 'template <typename T>'; %#ok<AGROW>
-
-                var_names = '';
-                for i = 1 : length(formal_params) - 1
-                    var_names = [var_names, 'T ', formal_params{i}, ', '];
+                
+                if isempty(formal_params{1})
+                    cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::', name, '()']; %#ok<AGROW>
+                else 
+                    var_names = '';
+                    for i = 1 : length(formal_params) - 1
+                        var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
+                    end
+                    var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
+                    cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
                 end
-                var_names = [var_names, 'T ', formal_params{end}];
-                cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
+                      
                 cppFile{end + 1, 1} = '{'; %#ok<AGROW>
 
                 for i = 1 : length(proc_body)
 
-                    proc_body{i} = TranslateLineOfCode(proc_body{i});
+                    tmpStr = strsplit(proc_body{i}, ':');
+                    tmpStr = strtrim(tmpStr{1});
+                    tmpStr = TranslateLineOfCode(tmpStr);
+                    
+                    if isempty(tmpStr) || ~isempty(strfind(tmpStr, 'PROCEDURE')) || ...
+                            ~isempty(strfind(tmpStr, 'TABLE')) || ...
+                            ~isempty(strfind(tmpStr, 'UNITSOFF'))
+                        
+                        continue
+                    elseif strfind(tmpStr, 'LOCAL')
+                        cppFile{end + 1, 1} = [regexprep(tmpStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
+                        
+                    elseif strfind(tmpStr, 'FROM')
 
-                    if strfind(proc_body{i}, 'LOCAL')
-                        cppFile{end + 1, 1} = '    // LOCAL'; %#ok<AGROW>
-                        cppFile{end + 1, 1} = [regexprep(proc_body{i}, 'LOCAL', 'T'), ';']; %#ok<AGROW>
-                        cppFile{end + 1, 1} = ''; %#ok<AGROW>
-                    elseif strfind(proc_body{i}, ':')
-                        if ~(isempty(strfind(proc_body{i}, 'PROCEDURE')) || isempty(strfind(proc_body{i}, ':')))
-                            cline = strsplit(proc_body{i}, ':');
-                            cppFile{end + 1, 1} = ['//', cline{2}]; %#ok<AGROW>
+                        cppFile{end + 1, 1} = ParsForSycleHdr(tmpStr); %#ok<AGROW>
+                        
+                    elseif strfind(tmpStr, '=')
+                        if tmpStr(end) == '}'
+                            cppFile{end + 1, 1} = [tmpStr(1 : end - 1), ';}']; %#ok<AGROW>
+                        elseif cStr(end) == '{'
+                            cppFile{end + 1, 1} = cStr; %#ok<AGROW>   
                         else
-                            cppFile{end + 1, 1} = regexprep(proc_body{i}, ':', '//'); %#ok<AGROW>
+                            cppFile{end + 1, 1} = [tmpStr, ';']; %#ok<AGROW>
                         end
-                    elseif strfind(proc_body{i}, '=')
-                        if isempty(strfind(proc_body{i}, '}'))
-                            cppFile{end + 1, 1} = [proc_body{i}, ';']; %#ok<AGROW>
-                        else
-                            cppFile{end + 1, 1} = regexprep(proc_body{i}, '}', ';}'); %#ok<AGROW>
-                        end
-                    elseif ~(isempty(strfind(proc_body{i}, 'if')) && isempty(strfind(proc_body{i}, 'else')))
-                        if isempty(strfind(proc_body{i}, '}'))
-                            cppFile{end + 1, 1} = proc_body{i}; %#ok<AGROW>
-                        else
-                            cppFile{end + 1, 1} = regexprep(proc_body{i}, '}', ';}'); %#ok<AGROW>
-                        end
+                    else
+                        cppFile{end + 1, 1} = tmpStr; %#ok<AGROW>
                     end
                 end
-                cppFile{end + 1, 1} = '}'; %#ok<AGROW>
-            end
-
+            end 
+         
         elseif strfind(tline, '%FUNCTION_DEFINITIONS')
+            
+            for idx = 1 : length(parameters_blocks.FUNCTION)
+                
+                func = parameters_blocks.FUNCTION{idx};
+                [name, formal_params, func_body] = ParseFunctionBlock(func);
 
+                cppFile{end + 1, 1} = ''; %#ok<AGROW>
+                cppFile{end + 1, 1} = 'template <typename T>'; %#ok<AGROW>
+                
+                if isempty(formal_params{1})
+                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '()']; %#ok<AGROW>
+                else 
+                    var_names = '';
+                    for i = 1 : length(formal_params) - 1
+                        var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
+                    end
+                    var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
+                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
+                end
+                      
+                cppFile{end + 1, 1} = '{'; %#ok<AGROW>
+                cppFile{end + 1, 1} = ['T ', '_', name, ';']; %#ok<AGROW>
+
+                for i = 1 : length(func_body)
+
+                    tmpStr = strsplit(func_body{i}, ':');
+                    tmpStr = strtrim(tmpStr{1});
+                    tmpStr = TranslateLineOfCode(tmpStr);
+                    
+                    if isempty(tmpStr) || ~isempty(strfind(tmpStr, 'FUNCTION')) || ...
+                            ~isempty(strfind(tmpStr, 'TABLE')) || ...
+                            ~isempty(strfind(tmpStr, 'UNITSOFF'))
+                        
+                        continue
+                    elseif strfind(tmpStr, 'LOCAL')
+                        cppFile{end + 1, 1} = [regexprep(tmpStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
+                        
+                    elseif strfind(tmpStr, 'FROM')
+
+                        cppFile{end + 1, 1} = ParsForSycleHdr(tmpStr); %#ok<AGROW>
+                        
+                    elseif strfind(tmpStr, '=')
+                        if strfind(tmpStr, name)
+                            tmpStr = regexprep(tmpStr, name, ['_', name]);
+                        end
+                        if tmpStr(end) == '}'
+                            cppFile{end + 1, 1} = [tmpStr(1 : end - 1), ';}']; %#ok<AGROW>
+                        elseif cStr(end) == '{'
+                            cppFile{end + 1, 1} = cStr; %#ok<AGROW>   
+                        else
+                            cppFile{end + 1, 1} = [tmpStr, ';']; %#ok<AGROW>
+                        end
+                    elseif i == length(func_body)
+                        cppFile{end + 1, 1} = ['return ', ['_', name], ';']; %#ok<AGROW>
+                        cppFile{end + 1, 1} = tmpStr; %#ok<AGROW>
+                    else
+                        cppFile{end + 1, 1} = tmpStr; %#ok<AGROW>
+                    end
+                end
+            end 
+            
+        %{
             for idx = 1 : length(parameters_blocks.FUNCTION)
 
                 func = parameters_blocks.FUNCTION{idx};
@@ -205,14 +358,18 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 cppFile{end + 1, 1} = ''; %#ok<AGROW>
                 cppFile{end + 1, 1} = 'template <typename T>'; %#ok<AGROW>
 
-                var_names = '';
-                for i = 1 : length(formal_params) - 1
-                    var_names = [var_names, 'T ', formal_params{i}, ', '];
+                if isempty(formal_params{1})
+                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '()']; %#ok<AGROW>
+                else
+                    var_names = '';
+                    for i = 1 : length(formal_params) - 1
+                        var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
+                    end
+                    var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
+                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
                 end
-                var_names = [var_names, 'T ', formal_params{end}];
-                cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
+                
                 cppFile{end + 1, 1} = '{'; %#ok<AGROW>
-
                 cppFile{end + 1, 1} = ['    T ', '_', name, ';']; %#ok<AGROW>
 
                 for i = 1 : length(func_body) - 1
@@ -265,6 +422,9 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 cppFile{end + 1, 1} = '}'; %#ok<AGROW>
             end
 
+           %} 
+            
+            
         elseif strfind(tline, '%TEMPLATE_INSTANTIATION_FLOAT')
 
             cppFile{end + 1, 1} = ['class ', mod_file_name, '<float>;']; %#ok<AGROW>
@@ -276,7 +436,7 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
             cppFile{end + 1, 1} = tline; %#ok<AGROW>
         end
     end
-
+        
     fclose(fCpp);
 
     cppPath = fullfile(out_path, [mod_file_name, '.cpp']);
@@ -292,4 +452,29 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
     end
 
     fclose(fid);
+end
+
+function outStr = ParsForSycleHdr(inStr)
+
+    leftIdx = strfind(inStr, 'FROM');
+    leftIdx = leftIdx(1) + 5;
+    rigthIdx = strfind(inStr, '=');
+    rigthIdx = rigthIdx(1) - 1;
+    counterName = strtrim(inStr(leftIdx : rigthIdx));
+
+    leftIdx = rigthIdx + 2;
+    rigthIdx = strfind(inStr, 'TO');
+    rigthIdx = rigthIdx(1) - 1;
+    startValue = strtrim(inStr(leftIdx : rigthIdx));
+
+    leftIdx = rigthIdx + 3;
+    rigthIdx = strfind(inStr, '{');
+    rigthIdx = rigthIdx(1) - 1;
+    endValue = strtrim(inStr(leftIdx : rigthIdx));
+
+    outStr = ['for(int ', counterName, ' = ', startValue, ...
+        '; ', counterName, ' <= ', endValue, ';', ...
+        ' ++', counterName, ') {'];
+    
+    outStr = regexprep(outStr, '\(T\)', '');
 end

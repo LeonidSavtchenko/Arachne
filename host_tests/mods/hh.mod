@@ -30,7 +30,7 @@ NEURON {
 	THREADSAFE : assigned GLOBALs will be per thread
 }
  
-INCLUDE "params.inc"
+INCLUDE "paramshh.inc"
 
 STATE {
         m h n
@@ -108,6 +108,6 @@ UNITSOFF
         ninf = alpha/sum
 }
 
-INCLUDE "function.inc"
+INCLUDE "functionhh.inc"
  
 UNITSON

@@ -10,6 +10,7 @@ function pb_modFilesSelector_Callback(hObject, ~)
     global modFileNamesWithUninitParams_i
     global modFileNames_i
     global modFileNameToUninitParamsNamesStruct_i
+    global FileSelectorIds
     
     % Determine the neuron type (e or i)
     userData = get(hObject, 'UserData');
@@ -18,7 +19,11 @@ function pb_modFilesSelector_Callback(hObject, ~)
     pbName = params{panIdx}{parIdx}.name;
     neuronType = pbName(end);
     
-    [fileNames, dirPath] = uigetfile({'*.mod', 'MOD files (*.mod)'; '*.*', 'All files (*.*)'}, 'Select MOD file(s)', 'MultiSelect', 'on');
+    [fileNames, dirPath] = UIGetFile(...
+        FileSelectorIds.ModFiles, ...
+        {'*.mod', 'MOD files (*.mod)'; '*.*', 'All files (*.*)'}, ...
+        'Select MOD file(s)', ...
+        'MultiSelect', 'on');
     if isequal(fileNames, 0) || isequal(fileNames, 0)
         % Cancelled by user
         modFileNames = {};

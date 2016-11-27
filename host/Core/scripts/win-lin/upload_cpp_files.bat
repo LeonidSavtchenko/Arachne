@@ -9,7 +9,7 @@ cd %1
 rem Check if an old archive exists, if so -- delete
 if exist AllModCurrents.zip del AllModCurrents.zip
 
-"%THIRDPARTYDIR%\7za.exe" a "%1\AllModCurrents.zip" -r "%1\AllModCurrents.*" 
+"%THIRDPARTYDIR%\7za.exe" a "%1\AllModCurrents.zip" -r "%1\AllModCurrents.*"
 
 rem Go to 3rd party software directory containing pscp.exe and plink.exe
 cd %THIRDPARTYDIR%

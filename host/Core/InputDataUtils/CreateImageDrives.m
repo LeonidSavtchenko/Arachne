@@ -2,6 +2,7 @@ function CreateImageDrives()
 %% Create image external drive for e-cells
 
     global num_e image
+    global DialogIds
     
     maxNumEditableCells = 32 ^ 2;
     
@@ -9,18 +10,20 @@ function CreateImageDrives()
     
     squareSize = ceil(sqrt(num_e));
     
+    dialogId = DialogIds.ImageSource;
+    
     if num_e <= maxNumEditableCells
-        
+
         if ispc
             question = 'Do you want to draw a new image with Matlab, draw a new image with MS Paint or load an existent image file?';
-            choice = questdlg(question, 'Image option', 'Draw with Matlab', 'Draw with MS Paint', 'Load', 'Draw with Matlab');
+            choice = QuestDlg(dialogId, question, 'Image option', 'Draw with Matlab', 'Draw with MS Paint', 'Load', 'Draw with Matlab');
         else
             question = 'Do you want to draw a new image or to load an existent image file?';
-            choice = questdlg(question, 'Image option', 'Draw', 'Load', 'Draw');
+            choice = QuestDlg(dialogId, question, 'Image option', 'Draw', 'Load', 'Draw');
         end
-        
+
         assert(~isempty(choice), 'Aborted by user.');
-        
+
         if strcmp(choice, 'Draw with Matlab') || strcmp(choice, 'Draw')
             image = CreateImageDrivesWithMatlab(squareSize);
         else
@@ -29,15 +32,15 @@ function CreateImageDrives()
             end
             image = LoadImageDrivesFromFile(squareSize);
         end
-        
+
     else
         % Matlab GUI is too slow to edit the image
-        
+
         question = 'Do you want to draw a new image or to load an existent image file?';
-        choice = questdlg(question, 'Image option', 'Draw', 'Load', 'Draw');
-        
+        choice = QuestDlg(dialogId, question, 'Image option', 'Draw', 'Load', 'Draw');
+
         assert(~isempty(choice), 'Aborted by user.');
-        
+
         if strcmp(choice, 'Draw')
             CreateImageDrivesFileWithMSPaint(squareSize);
         end
@@ -175,6 +178,7 @@ end
 function image = LoadImageDrivesFromFile(squareSize)
     
     global num_e
+    global FileSelectorIds
     
     % Prepare the array of supported file extensions and their descriptions to use as the file filter
     formatStruct = imformats();
@@ -188,10 +192,10 @@ function image = LoadImageDrivesFromFile(squareSize)
         filterSpec{i, 1} = filter;
     end
     filterSpec = [filterSpec; {'*.*', 'All Files'}];
-    
-    % Select the file with UI
+
+    % Select the file with UI (or without UI if we are called from Matlab mobile)
     tit = sprintf('Open a monochromatic image of size %i-by-%i pixels', squareSize, squareSize);
-    [name, path, index] = uigetfile(filterSpec, tit);
+    [name, path, index] = UIGetFile(FileSelectorIds.ImageFile, filterSpec, tit);
     if index == 0
         error('Aborted by user.');
     end

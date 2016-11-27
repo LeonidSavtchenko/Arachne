@@ -2,6 +2,7 @@ function pb_OK_Callback(~, ~)
 
     global invalidParams hf saveInput2Output
     global guiType debugMode
+    global GuiTypes
     
     if ~isempty(invalidParams)
         msg = ['The following parameters are not valid:', invalidParams];
@@ -22,10 +23,12 @@ function pb_OK_Callback(~, ~)
         EvaluateAllRemainders(guiType);
     end
     
-    % Translate all the MOD files to C++ source and header files for both "e" and "i" neurons,
-    % deploy the files to the worker source directory,
-    % then build the worker
-    TranslateModFilesDeployCppFilesAndBuildWorker();
+    if guiType == GuiTypes.StartFromScratch
+        % Translate all the MOD files to C++ source and header files for both "e" and "i" neurons,
+        % deploy the files to the worker source directory,
+        % then build the worker
+        TranslateModFilesDeployCppFilesAndBuildWorker();
+    end
     
     % Save input parameters
     if saveInput2Output

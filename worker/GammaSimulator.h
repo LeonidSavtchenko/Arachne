@@ -4,6 +4,7 @@
 #include <omp.h>
 #include "Astro/AstroNet.h"
 #include "ExtraCurrent/ExtraCurrent.h"
+#include "ModCurrents/ModCurrent.h"
 #include "GABA/GABA.h"
 #include "Containers/LocalVector.h"
 #include "Containers/DistVector.h"
@@ -73,7 +74,8 @@ private:
     bool gatherSCM;
     bool enableAstro;
     bool enableExtraCurrent_e, enableExtraCurrent_i;
-    
+	bool importMod_e, importMod_i;
+
     BaseStdpMechanism<T, RNGT> *stdpMechanism_ee;
     BaseStdpMechanism<T, RNGT> *stdpMechanism_ii;
     BaseStdpMechanism<T, RNGT> *stdpMechanism_ei;
@@ -255,6 +257,10 @@ private:
     // Extra currents
     ExtraCurrent<T, RNGT> extraCurrent_e;
     ExtraCurrent<T, RNGT> extraCurrent_i;
+
+	// Mod currents
+	ModCurrent<T> modCurrent_e;
+	ModCurrent<T> modCurrent_i;
 
     LocalVector<int> lastSpikes_local;
     DistVector<int> lastSpikes_e;

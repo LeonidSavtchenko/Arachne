@@ -1,8 +1,10 @@
 #pragma once
 
-#include "ModCurrentsBase.h"
+#include "..\ModCurrentsBase.h"
 
 #include <vector>
+
+%DEFINE_PARAMETER
 
 namespace mod
 {
@@ -15,7 +17,6 @@ public:
     %PROTOTYPE_DEFAULT_CONSTRUCTOR
 
     // ASSIGNED (public)
-    T v;
 
     // INITIAL
     void init();
@@ -27,6 +28,8 @@ public:
     void currents();
 
 private:
+    //FREE LOCAL VARIABLES
+    %FREE_LOCAL_VARIABLES
 
     %CONSTANT_NAMES
 
