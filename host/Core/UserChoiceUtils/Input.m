@@ -10,7 +10,7 @@ function reply = Input(questionId, prompt)
     fieldName = GetFieldName(QuestionIds, questionId);
     try
         % Try to get a predefined answer
-    	reply = userChoices.(fieldName);
+        reply = userChoices.(fieldName);
     catch
         if mobileMode
             % Interaction with user is impossible

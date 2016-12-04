@@ -3,7 +3,7 @@ function test_TranslateLineOfCode()
     path = fullfile(cd, '..', 'host', 'Core', 'ModFileUtils');
     addpath(path);
 
-    % Integral numbers
+    % Whole numbers
     test('3^4', 'pow((T)3,(T)4)');
     test('3 ^4', 'pow((T)3 ,(T)4)');
     test('-3^ 4', '-pow((T)3, (T)4)');
@@ -56,23 +56,50 @@ function test_TranslateLineOfCode()
     test(' x ^ (q^w12) - x12 * (x + y)  ^ (2 + (x -12.1)/2) / (z + y)', ' pow(x , (pow(q,w12))) - x12 * pow((x + y)  , ((T)2 + (x -(T)12.1)/(T)2)) / (z + y)');
     
     % Comments
-    test(': a^b', ': a^b');
+    test(': a^b');
     test('2^3 : 4^5', 'pow((T)2,(T)3) : 4^5');
     
     % No numbers
-    test('a / b - c', 'a / b - c');
+    test('a / b - c');
 
     % No powers
     test('1 + 3 * 2 / sin(x)', '(T)1 + (T)3 * (T)2 / sin(x)');
 
+    % Indexing
+    test('x[i]');
+    % !! test('x[y[j]]');
+    % !! add more tests
+    
+    % Adding "this->" before "v" and "t"
+    test('v', 'this->v');
+    test('t', 'this->t');
+    test('2*v + 3*u', '(T)2*this->v + (T)3*u');
+    test('a*t + v', 'a*this->t + this->v');
+    test('foo(t, v)', 'foo(this->t, this->v)');
+    
+    % No "v" or "t"
+    test('t1 ^ v2 + t[3] - v(4)', 'pow(t1 , v2) + t[3] - v((T)4)');
+    test('vt * tv / tt % vv');
+    test('_v + _t + v_ + t_');
+    
 end
 
-function test(in, expOut)
+function test(in,   expOut)
 
+    if nargin == 1
+        expOut = in;
+    end
+    
     actOut = TranslateLineOfCode(in);
     
+    % !!
+    expOut = regexprep(expOut, '\s*', '');
+    actOut = regexprep(actOut, '\s*', '');
+    
+    disp(['in:     ', in]);
     disp(['expOut: ', expOut]);
     disp(['actOut: ', actOut]);
+    fprintf('\n');
         
     if ~strcmp(expOut, actOut)
         assert(false);

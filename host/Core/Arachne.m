@@ -31,12 +31,14 @@ function Arachne(varargin)
                 guiType = GuiTypes.ContinueOldSession;
             end
         case Scenarios.MonitorBackgroundProcess;
+            % In mobile mode this scenario does not provide continuous monitoring of the simulation,
+            % but reports the progress only once and then exits
             guiType = GuiTypes.MonitorBackgroundProcess;
         case Scenarios.DoNothing
             return
     end
     
-    %% Show the GUI
-    PrepareParamsWithGUI();
+    %% Prepare and show the GUI
+    PrepareAndShowGUI();
     
 end

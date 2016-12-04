@@ -29,16 +29,16 @@ function AddFixedSizeMatrix(name, values, rowNames, colNames, desc,   relPred, v
     % The control itself
     xPos = xPos + layout.xMargin2;
     parIdx = length(params{panIdx}) + 1;
-    numRows = size(values, 1);
-    numCols = size(values, 2);
-    w = layout.tcWidth * numCols + layout.nameTableWidth;
-    h = layout.trHeight * (numRows + 1);
+    numDataRows = size(values, 1);
+    numDataCols = size(values, 2);
+    w = layout.tcHdrWidth + numDataCols * layout.tcWidth;
+    h = layout.trHdrHeight + numDataRows * layout.trHeight;
     handlers(end + 1) = uitable('Units', 'pixels', ...
                                 'Position', [xPos, 0, w, h], ...
                                 'RowName', rowNames, ...
                                 'ColumnName', colNames, ...
                                 'Data', values, ...
-                                'ColumnEditable', true(1, numCols), ...
+                                'ColumnEditable', true(1, numDataCols), ...
                                 'UserData', [panIdx, parIdx], ...
                                 'CellEditCallback', @generic_Callback, ...
                                 'TooltipString', desc);
@@ -52,11 +52,11 @@ function cellNames = CorrectLengthName( cellNames )
     global maxLengthName
     for i = 1 : length(cellNames)
         currName = char(cellNames(i));
-      while length(currName) < maxLengthName
-          currName = [currName, ' '];
-      end
+        while length(currName) < maxLengthName
+            currName = [currName, ' '];
+        end
       
-      cellNames{i} = currName;
+        cellNames{i} = currName;
     end
 end
 

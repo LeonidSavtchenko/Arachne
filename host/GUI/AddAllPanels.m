@@ -24,7 +24,7 @@ function AddAllPanels()
             AddInitCondXCurParams();
             AddMeasuredParams();
             AddMeasuredAstroParams();
-            AddMeasuredXCurParams();
+            AddMeasuredXModCurParams();
         case GuiTypes.ContinueOldSession
             % START_Arachne -> Continue old session
             AddModelAndHpcParamsForContinuation();

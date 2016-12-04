@@ -1,9 +1,12 @@
 function RunAndMonitor()
+%% This scripts normally waits until the simulation completes,
+%  but it returns after the first report in the mobile mode
 
     global remoteHPC scalTest continuationMode imageMode recallMode backgroundMode
     global guiType GuiTypes
     global image %#ok<NUSED>
     global DialogIds
+    global mobileMode
     
     %% Image external drive input
     if imageMode
@@ -86,7 +89,12 @@ function RunAndMonitor()
     
     %% If simulation is running in background on this machine, do monitoring of the process
     if backgroundMode && ~remoteHPC
-        MonitorBackgroundProcess();
+        completed = MonitorBackgroundProcess();
+        if mobileMode && ~completed
+            % Matlab mobile shows all the messages only after the script exits,
+            % so we report progress only once and exit
+            return
+        end
     end
     
     %% Check if simulation finished successfully
@@ -98,5 +106,5 @@ function RunAndMonitor()
                    'Please contact Sergey in that case.']);
     assert(isComplete, msg);
     DeleteFile({'iofiles'}, 'complete');
-
+    
 end

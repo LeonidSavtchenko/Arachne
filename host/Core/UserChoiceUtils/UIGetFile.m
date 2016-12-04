@@ -10,7 +10,7 @@ function [fileName, pathName, filterIndex] = UIGetFile(fileSelectorId, varargin)
     fieldName = GetFieldName(FileSelectorIds, fileSelectorId);
     try
         % Try to get a predefined choice
-    	filePath = userChoices.(fieldName);
+        filePath = userChoices.(fieldName);
     catch
         if mobileMode
             % Interaction with user is impossible

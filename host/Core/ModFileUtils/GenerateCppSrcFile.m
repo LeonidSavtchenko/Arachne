@@ -29,49 +29,44 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
             cppFile{end + 1, 1} = [mod_file_name, '<T>::', mod_file_name, '()']; %#ok<AGROW>
 
         elseif strfind(tline, '%INIT_CURRENTS')
+            
+            assigned_params = ParseAssignedBlock(parameters_blocks.ASSIGNED);
+            parameter_params = ParseParameterBlock(parameters_blocks.PARAMETER);
 
-            assignedParams = ParseAssignedBlock(parameters_blocks.ASSIGNED);
-            parameterParams = ParseParameterBlock(parameters_blocks.PARAMETER);
+            notInitCurrentParams = {};
 
-            notInitParams = {};
+            for i = 1 : length(assigned_params)
+                tmpStr = assigned_params{i};
 
-            for i = 1 : length(parameterParams)
-                currStr = parameterParams{i};
-
-                if isempty(strfind(currStr, '='))
+                if strfind(tmpStr, '=')
                     continue
                 end
 
-                if currStr(1) == 'i'
-                    notInitParams{end + 1, 1} = parameterParams{i}; %#ok<AGROW>
-                end
-            end
-
-            currentParams = {};
-
-            if isempty(notInitParams)
-                for j = 1 : length(assignedParams)
-                    currStr = assignedParams{j};
-                    if currStr(1) == 'i'
-                    	currentParams{end + 1, 1} = currStr; %#ok<AGROW>
-                    end
-                end
-            else
-                for i = 1 : length(notInitParams)
-                    for j = 1 : length(assignedParams)
-                        if ~strcmp(notInitParams{i}, assignedParams{j})
-                            currentParams{end + 1, 1} = assignedParams{j}; %#ok<AGROW>
-                        end
-                    end
+                if tmpStr(1) == 'i'
+                    notInitCurrentParams{end + 1, 1} = assigned_params{i}; %#ok<AGROW>
                 end
             end
             
+            for i = 1 : length(parameter_params)
+                tmpStr = parameter_params{i};
+
+                if isempty(strfind(tmpStr, '='))
+                    continue
+                end
+
+                if tmpStr(1) == 'i'
+                    notInitCurrentParams{end + 1, 1} = parameter_params{i}; %#ok<AGROW>
+                end
+            end
+
+            cppFile{end + 1, 1} = '    this->_currents = std::vector<T*>(_numCurrents);'; %#ok<AGROW>
+           
             countCurrents = -1;
-            for i = 1 : length(currentParams)
-                if isempty(strfind(currentParams{i}, '['))
+            for i = 1 : length(notInitCurrentParams)
+                if isempty(strfind(notInitCurrentParams{i}, '['))
                     countCurrents = countCurrents + 1;
                     cppFile{end + 1, 1} = ...
-                        ['this->_currents[', int2str(countCurrents), '] = &', currentParams{i}, ';']; %#ok<AGROW>
+                        ['    this->_currents[', int2str(countCurrents), '] = &', notInitCurrentParams{i}, ';']; %#ok<AGROW>
                 end
             end
 
@@ -82,14 +77,14 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 stateParams = ParseStateBlock(scope);
 
                 if ~isempty(stateParams)
-                    cppFile{end + 1, 1} = 'this->_states = std::vector<T*>(_numStates);'; %#ok<AGROW>
+                    cppFile{end + 1, 1} = '    this->_states = std::vector<T*>(_numStates);'; %#ok<AGROW>
                 end
                  countStates = -1;
                 for i = 1 : length(stateParams)
                      if isempty(strfind(stateParams{i}, '['))
                          countStates = countStates + 1;
                          cppFile{end + 1, 1} = ...
-                             ['this->_states[', int2str(countStates), '] = &', stateParams{i}, ';']; %#ok<AGROW>
+                             ['    this->_states[', int2str(countStates), '] = &', stateParams{i}, ';']; %#ok<AGROW>
                      end
                 end
             end
@@ -101,14 +96,14 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 stateParams = ParseStateBlock(scope);
                 
                 if ~isempty(stateParams)
-                    cppFile{end + 1, 1} = 'this->_derivatives = std::vector<T*>(_numStates);'; %#ok<AGROW>
+                    cppFile{end + 1, 1} = '    this->_derivatives = std::vector<T*>(_numStates);'; %#ok<AGROW>
                 end
                 countStates = -1;
                 for i = 1 : length(stateParams)
                     if isempty(strfind(stateParams{i}, '['))
                         countStates = countStates + 1;
                         cppFile{end + 1, 1} = ...
-                            ['this->_derivatives[', int2str(countStates), '] = &', stateParams{i}, '_rhp;']; %#ok<AGROW>
+                            ['    this->_derivatives[', int2str(countStates), '] = &', stateParams{i}, '_rhp;']; %#ok<AGROW>
                     end
                 end
             end
@@ -124,30 +119,31 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
             i = 1;
             while i <= length(params)
                 
-                cStr = strtrim(params{i});
+                cStr = params{i};
                 
                 if strfind(cStr, 'INITIAL')
+                    
                     cppFile{end + 1, 1} = '{'; %#ok<AGROW>
                     i = i + 1;
                     
                 elseif strcmp(cStr, 'VERBATIM')
           
                     i = i + 1;
-                    cStr = strtrim(params{i});
+                    cStr = params{i};
                     
                     while ~strcmp(cStr, 'ENDVERBATIM')
                         cppFile{end + 1, 1} = cStr; %#ok<AGROW>
                         i = i + 1;
-                        cStr = strtrim(params{i});
+                        cStr = params{i};
                     end
                     i = i + 1;
                 else
                     cStr = strsplit(cStr, ':');
-                    cStr = strtrim(cStr{1});
+                    cStr = cStr{1};
                     cStr = TranslateLineOfCode(cStr);
                     
                     if isempty(cStr)
-                        cppFile{end + 1, 1} =''; %#ok<AGROW>
+                        cppFile{end + 1, 1} = ''; %#ok<AGROW>
                     elseif strfind(cStr, 'LOCAL')
                         cppFile{end + 1, 1} = [regexprep(cStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
                         
@@ -186,7 +182,7 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
             i = 1;
             while i <= length(params)
                 
-                cStr = strtrim(params{i});
+                cStr = params{i};
                 
                 if strfind(cStr, 'BREAKPOINT') 
                     cppFile{end + 1, 1} = '{'; %#ok<AGROW>
@@ -199,22 +195,23 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                     cppFile{end + 1, 1} = [regexprep(cStr, 'LOCAL', 'T'), ';']; %#ok<AGROW>
                 elseif strcmp(cStr, 'VERBATIM')
                     i = i + 1; 
-                    cStr = strtrim(params{i});
+                    cStr = params{i};
                            
                     while ~strcmp(cStr, 'ENDVERBATIM')
                         cppFile{end + 1, 1} = cStr; %#ok<AGROW>
-                         i = i + 1; 
-                         cStr = strtrim(params{i});
+                        i = i + 1; 
+                        cStr = params{i};
                     end               
                     i = i + 1; 
                 elseif strfind(cStr, '=')
                     i = i + 1;
-                    cppFile{end + 1, 1} = [cStr, ';']; %#ok<AGROW>
+                    cppFile{end + 1, 1} = [TranslateLineOfCode(cStr), ';']; %#ok<AGROW>
                 else
                     i = i + 1;
                     cppFile{end + 1, 1} = cStr; %#ok<AGROW>
                 end
             end
+            
         elseif strfind(tline, '%DERIVATIVE_SIGNATURE')
 
             cppFile{end + 1, 1} = ['void ', mod_file_name, '<T>::states()']; %#ok<AGROW>
@@ -226,10 +223,11 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
             for i = 2 : length(params) - 1
                 if strfind(params{i}, '=')
                     cline = regexprep(params{i}, '\s*', '');
-                    cppFile{end + 1, 1} = ['    ', regexprep(cline, '''', '_rhp'), ';']; %#ok<AGROW>
+                    line = ['    ', regexprep(cline, '''', '_rhp'), ';'];
                 else
-                    cppFile{end + 1, 1} = ['    ', regexprep(params{i}, '\s*', ''), ';']; %#ok<AGROW>
+                    line = ['    ', regexprep(params{i}, '\s*', ''), ';'];
                 end
+                cppFile{end + 1, 1} = TranslateLineOfCode(line); %#ok<AGROW>
             end
 
         elseif strfind(tline, '%PROCEDURE_DEFINITIONS')
@@ -258,7 +256,7 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 for i = 1 : length(proc_body)
 
                     tmpStr = strsplit(proc_body{i}, ':');
-                    tmpStr = strtrim(tmpStr{1});
+                    tmpStr = tmpStr{1};
                     tmpStr = TranslateLineOfCode(tmpStr);
                     
                     if isempty(tmpStr) || ~isempty(strfind(tmpStr, 'PROCEDURE')) || ...
@@ -314,7 +312,7 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                 for i = 1 : length(func_body)
 
                     tmpStr = strsplit(func_body{i}, ':');
-                    tmpStr = strtrim(tmpStr{1});
+                    tmpStr = tmpStr{1};
                     tmpStr = TranslateLineOfCode(tmpStr);
                     
                     if isempty(tmpStr) || ~isempty(strfind(tmpStr, 'FUNCTION')) || ...
@@ -341,89 +339,13 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
                             cppFile{end + 1, 1} = [tmpStr, ';']; %#ok<AGROW>
                         end
                     elseif i == length(func_body)
-                        cppFile{end + 1, 1} = ['return ', ['_', name], ';']; %#ok<AGROW>
+                        cppFile{end + 1, 1} = ['    return _', name, ';']; %#ok<AGROW>
                         cppFile{end + 1, 1} = tmpStr; %#ok<AGROW>
                     else
                         cppFile{end + 1, 1} = tmpStr; %#ok<AGROW>
                     end
                 end
             end 
-            
-        %{
-            for idx = 1 : length(parameters_blocks.FUNCTION)
-
-                func = parameters_blocks.FUNCTION{idx};
-                [name, formal_params, func_body] = ParseFunctionBlock(func);
-
-                cppFile{end + 1, 1} = ''; %#ok<AGROW>
-                cppFile{end + 1, 1} = 'template <typename T>'; %#ok<AGROW>
-
-                if isempty(formal_params{1})
-                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '()']; %#ok<AGROW>
-                else
-                    var_names = '';
-                    for i = 1 : length(formal_params) - 1
-                        var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
-                    end
-                    var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
-                    cppFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '(', var_names, ')']; %#ok<AGROW>
-                end
-                
-                cppFile{end + 1, 1} = '{'; %#ok<AGROW>
-                cppFile{end + 1, 1} = ['    T ', '_', name, ';']; %#ok<AGROW>
-
-                for i = 1 : length(func_body) - 1
-
-                    cline = func_body{i};
-
-                    cline = TranslateLineOfCode(cline);
-                    
-                    if strfind(cline, ':')
-
-                        if ~(isempty(strfind(cline, 'FUNCTION')) || isempty(strfind(cline, ':')))
-                            cline = strsplit(cline, ':');
-                            cppFile{end + 1, 1} = ['//', cline{2}]; %#ok<AGROW>
-                        else
-                            cppFile{end + 1, 1} = regexprep(cline, ':', '//'); %#ok<AGROW>
-                        end
-                        
-                    elseif strfind(cline, 'LOCAL')
-                        cppFile{end + 1, 1} = '    // LOCAL'; %#ok<AGROW>
-                        cppFile{end + 1, 1} = ['    ',regexprep(cline, 'LOCAL', 'T'), ';']; %#ok<AGROW>
-                        cppFile{end + 1, 1} = ''; %#ok<AGROW>
-
-                    elseif strfind(cline, '=')
-                        if strfind(cline, name)
-                            cline = regexprep(cline, name, ['_', name]);
-                        end
-
-                        if isempty(strfind(cline, '}'))
-                            cppFile{end + 1, 1} = [cline, ';']; %#ok<AGROW>
-                        else
-                            cppFile{end + 1, 1} = regexprep(cline, '}', ';}'); %#ok<AGROW>
-                        end
-
-                    elseif ~(isempty(strfind(cline, 'if')) && isempty(strfind(cline, 'else')))
-                        if strfind(cline, name)
-                            cline = regexprep(cline, name, ['_', name]);
-                        end
-
-                        if isempty(strfind(cline, '}'))
-                            cppFile{end + 1, 1} = cline; %#ok<AGROW>
-                        else
-                            cppFile{end + 1, 1} = regexprep(cline, '}', ';}'); %#ok<AGROW>
-                        end
-                    elseif strfind(cline, '}')
-                         cppFile{end + 1, 1} = cline; %#ok<AGROW>
-                    end
-                end
-
-                cppFile{end + 1, 1} = ['    return ', ['_', name], ';']; %#ok<AGROW>
-                cppFile{end + 1, 1} = '}'; %#ok<AGROW>
-            end
-
-           %} 
-            
             
         elseif strfind(tline, '%TEMPLATE_INSTANTIATION_FLOAT')
 
@@ -432,8 +354,11 @@ function GenerateCppSrcFile(mod_file_name, parameters_blocks, out_path)
         elseif strfind(tline, '%TEMPLATE_INSTANTIATION_DOUBLE')
 
             cppFile{end + 1, 1} = ['class ', mod_file_name, '<double>;']; %#ok<AGROW>
+            
         else
+            
             cppFile{end + 1, 1} = tline; %#ok<AGROW>
+            
         end
     end
         
@@ -472,7 +397,7 @@ function outStr = ParsForSycleHdr(inStr)
     rigthIdx = rigthIdx(1) - 1;
     endValue = strtrim(inStr(leftIdx : rigthIdx));
 
-    outStr = ['for(int ', counterName, ' = ', startValue, ...
+    outStr = ['for (int ', counterName, ' = ', startValue, ...
         '; ', counterName, ' <= ', endValue, ';', ...
         ' ++', counterName, ') {'];
     

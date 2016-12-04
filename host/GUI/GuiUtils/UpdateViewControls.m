@@ -1,7 +1,11 @@
 function UpdateViewControls()
-    
+%% Update view controls, i.e. visibility (depending on parameter relevancy), position, size
+%  and color (depending parameter validness).
+%  Also, initialize global variables containing parameters values
+%  and invalid parameters names.
+
     global hf panIdx params customVars
-    global yPos yPos0 layout palette
+    global yPos yPos0 layout
     global invalidParams
     
     global guiType GuiTypes
@@ -15,7 +19,8 @@ function UpdateViewControls()
         fields = fieldnames(customVars);
         for varIdx = 1 : length(fields)
             cmd = sprintf('%s = customVars.%s;', fields{varIdx}, fields{varIdx});
-            eval(cmd);
+            % The next command must be executed in the same function as other commands marked with (*)
+            eval(cmd);  % (*)
         end
     end
     
@@ -29,14 +34,11 @@ function UpdateViewControls()
             value = params{panIdx_}{parIdx}.value;
             
             handlers = params{panIdx_}{parIdx}.handlers;
-            try
-                style = get(handlers(2), 'Style');
-            catch
-                style = 'uitable';
-            end
-            if strcmp(style, 'edit')
-                min = get(handlers(2), 'Min');
-                max = get(handlers(2), 'Max');
+            h2 = handlers(2);
+            style = GetUIControlStyle(h2);
+            if strcmp(style, 'edit') || strcmp(style, 'mledit')
+                min = get(h2, 'Min');
+                max = get(h2, 'Max');
             else
                 max = 0;
                 min = 0;
@@ -45,12 +47,14 @@ function UpdateViewControls()
                 % Text area is evaluated elsewhere
             elseif ischar(value)
                 try
-                    value = eval(value);
+                    % The next command must be executed in the same function as other commands marked with (*)
+                    value = eval(value);    % (*)
                 catch
                     value = nan;
                 end
             end
-            Assign(params{panIdx_}{parIdx}.name, value);
+            % The next command must be executed in the same function as other commands marked with (*)
+            Assign(params{panIdx_}{parIdx}.name, value);    % (*)
         end
     end
     
@@ -66,7 +70,8 @@ function UpdateViewControls()
             
             relPred = params{panIdx_}{parIdx}.relPred;
             if ~islogical(relPred)
-                rel = eval(relPred);
+                % The next command must be executed in the same function as other commands marked with (*)
+                rel = eval(relPred);    % (*)
             else
                 rel = relPred;
             end
@@ -79,146 +84,212 @@ function UpdateViewControls()
                 vis = false;
             end
             
-            % Update control visibility
+            % Get handlers of this control
             handlers = params{panIdx_}{parIdx}.handlers;
-            try
-                style = get(handlers(2), 'Style');
-            catch
-                style = 'uitable';
-            end
+            h2 = handlers(2);
+            
+            style = GetUIControlStyle(h2);
             for j = 1 : length(handlers)
                 handler = handlers(j);
-                pos = get(handler, 'Position');
-                pos(2) = yPos;
-                if j == 1 || j == 3
-                    % Name or Unit
-                    if strcmp(style, 'checkbox') || strcmp(style, 'edit')
-                        pos(2) = pos(2) - layout.ebYMargin;
-                    elseif strcmp(style, 'popupmenu')
-                        pos(2) = pos(2) - layout.pmYMargin;
-                    end
-                elseif j == 2 && strcmp(style, 'uitable')
-                    % Table
-                    tablePos = get(handlers(2), 'Position');
-                    pos(2) = pos(2) - tablePos(4) + layout.yStep - layout.tYMargin;
-                end
-                    
-                set(handler, 'Position', pos);
-                SetVisibility(handler, vis);
 
-                if j == 2 && (strcmp(style, 'edit') || strcmp(style, 'uitable'))
-                    % The control itself
-                    
+                % Update y coordinate for Name and Unit labels
+                UpdateYForNameAndUnitLabels(handler, style, j, panIdx_);
+                
+                % Update color for editboxes and tables according to the validation predicate value
+                if j == 2 && (strcmp(style, 'edit') || strcmp(style, 'mledit') || strcmp(style, 'uitable'))
+
                     % Evaluate the validation predicate
                     valPred = params{panIdx_}{parIdx}.valPred;
                     try
-                        val = eval(valPred);
+                        % The next command must be executed in the same function as other commands marked with (*)
+                        val = eval(valPred);    % (*)
                     catch
                         val = false;
                     end
-                    
-                    if vis
-                        if ~strcmp(style, 'uitable')
-                            if val
-                                color = palette.validColor;
-                            else
-                                color = palette.invalidColor;
-                            end
-                        else
-                            if val
-                                color = palette.tableValidColor;
-                            else
-                                color = palette.tableInvalidColor;
-                            end
-                        end
-                        set(handler, 'BackgroundColor', color);
-                    end
-                    if rel && ~val
-                        invalidParams{end + 1} = params{panIdx_}{parIdx}.name; %#ok<AGROW>
-                    end
+
+                    % Set color for visible controls.
+                    % For relevant invalid controls, add the name to "invalidParams".
+                    name = params{panIdx_}{parIdx}.name;
+                    SetColorUpdateInvalidParams(handler, name, style, rel, vis, val);
                 end
             end
-            
-            if strcmp(style, 'uitable') 
-                pos = get(handlers(2), 'Position');
-                numCols = length(get(handlers(2), 'ColumnName')) + 1;
-                pos(3) = numCols * layout.tcWidth + layout.nameTableWidth; 
-                numRows = length(get(handlers(2), 'Data')) + 1;  % include header
-                h = numRows * layout.trHeight;
-                pos(2) = pos(2) + pos(4) - h;
-                pos(4) = h - Translation(numRows); 
-                set(handlers(2), 'Position', pos);
-            end
-            
-            if vis && strcmp(style, 'edit')
-                min = get(handlers(2), 'Min');
-                max = get(handlers(2), 'Max');
-                pos = get(handlers(2), 'Position');
-                if max - min > 1
-                    if panIdx_ == 1
-                        % Adjust position and size of the multiline edit control
-                        % to fill all available space on the panel
-                        pos(2) = layout.bsHeight + layout.pbHeight + 5 * layout.yMargin0;
-                        pos(4) = yPos - pos(2) + layout.ebHeight - layout.ebYMargin;
-                    else
-                        pos(2) = pos(2) - pos(4) + layout.ebHeight;
-                    end
-                    pos(3) = winWidth - pos(1) - layout.sWidth - 2 * layout.xMargin0;
-                    set(handlers(2), 'Position', pos); 
-                    yPos = yPos - pos(4) + layout.ebHeight;
-                end
-            end
-            
-            if vis && strcmp(style, 'uitable')
-                % Adjust size of the uitable to fit the panel size
-                pos = get(handlers(2), 'Position');
-                maxX = winWidth - layout.sWidth - 3 * layout.xMargin0;
-                isTooWide = false;  % if width already fits the panel, height will not be adjusted
-                if pos(1) + pos(3) > maxX
-                    pos(3) = maxX - pos(1);
-                    isTooWide = true;
-                end
-                minY = layout.bsHeight + layout.pbHeight + 3 * layout.yMargin0;
-                if isTooWide && (pos(2) + pos(4) > minY) && (pos(2) < minY)
-                    pos(2) = minY;
-                    pos(4) = yPos + layout.ebHeight - pos(2);
-                end
-                set(handlers(2), 'Position', pos);
-            end
-            
-            if vis && strcmp(style, 'pushbutton')
-                pos = get(handlers(2), 'Position');
-                pos(2) = pos(2) + layout.mspbYMargin;
-                set(handlers(2), 'Position', pos);
-            end
-            
+  
+            % Update visibility
+            SetVisibility(handlers, vis);
+
             if vis
-                if ~strcmp(style, 'uitable')
-                    yPos = yPos - layout.yStep;
-                else
-                    tableSize = get(handlers(2), 'Position');
-                    yPos = yPos - tableSize(4);
+                % Update position and size of the control
+                UpdatePosAndSize(h2, style, panIdx_, winWidth);
+                
+                % Do one step by y for positioning the next control
+                pos = get(h2, 'Position');
+                h = pos(4);
+                switch style
+                    case 'mledit'
+                        yPos = yPos - h + layout.mlebYMargin2;
+                    case 'uitable'
+                        yPos = yPos - h + layout.tYMargin;
                 end
+                yPos = yPos - layout.yStep;
             end
         end
     end
 end
 
 function Assign(name, value)
+%% Assign given value to the global variable of the given name in the caller function workspace
+
     assignin('caller', name, value);
     
     cmd1 = ['global ', name];
     cmd2 = [name, ' = value;'];
     eval(cmd1);
     eval(cmd2);
+    
 end
 
-function val = Translation(numRows)
+function UpdateYForNameAndUnitLabels(handler, style, j, panIdx)
+%% Update y coordinate for Name and Unit labels
 
-    if numRows < 6
-        val = 0;
-    else
-        val = numRows ^ 1.75 / 18.75; 
+    global yPos layout
+    
+    dy = 0;
+    
+    if j == 1 || j == 3
+        switch style
+            case 'edit'
+                dy = layout.ebNameUnitYMargin;
+            case 'mledit'
+                if panIdx == 1
+                    dy = layout.mlebNameYMargin1;
+                else
+                    dy = layout.mlebNameYMargin2;
+                end
+            case 'checkbox'
+                dy = layout.cbNameYMargin;
+            case 'popupmenu'
+                dy = layout.pmNameYMargin;
+            case 'uitable'
+                dy = layout.tNameYMargin;
+        end
+    end
+    
+    pos = get(handler, 'Position');
+    pos(2) = yPos - dy;
+    set(handler, 'Position', pos);
+    
+end
+                
+function SetColorUpdateInvalidParams(handler, name, style, rel, vis, val)
+%% Set color for visible controls.
+%  For relevant invalid controls, add the name to "invalidParams".
+
+    global palette invalidParams
+    
+    % Set color for visible controls
+    if vis
+        if ~strcmp(style, 'uitable')
+            if val
+                color = palette.validColor;
+            else
+                color = palette.invalidColor;
+            end
+        else
+            if val
+                color = palette.tableValidColor;
+            else
+                color = palette.tableInvalidColor;
+            end
+        end
+        set(handler, 'BackgroundColor', color);
     end
 
+    % For relevant invalid editboxes and tables,
+    % save the parameter name to the global cell array
+    if rel && ~val
+        invalidParams{end + 1} = name;
+    end
+    
+end
+
+function UpdatePosAndSize(h2, style, panIdx, winWidth)
+%% Update position and size of the control
+
+    global layout
+    
+    switch style
+        case 'mledit'
+            AdjustMultilineEditBoxPosAndSize(h2, panIdx, winWidth);
+        case 'uitable'
+            AdjustTablePosAndSize(h2, winWidth);
+        case 'pushbutton'
+            pos = get(h2, 'Position');
+            pos(2) = pos(2) + layout.mspbYMargin;
+            set(h2, 'Position', pos);
+    end
+    
+end
+                
+function AdjustMultilineEditBoxPosAndSize(h2, panIdx, winWidth)
+%% Adjust position and size of the multiline editbox to fill all available space by x.
+%  Also, we'll fill all availale space by y for the editbox on 1st panel.
+
+    global layout yPos
+
+    pos = get(h2, 'Position');    % [x, y, w, h]
+    
+    if panIdx == 1
+        % Adjust vertical position and height to fill all available space on the panel
+        pos(2) = layout.bsHeight + layout.pbHeight + 5 * layout.yMargin0;
+        pos(4) = yPos - pos(2) + layout.ebHeight - layout.mlebYMargin1;
+    else
+        % Adjust vertical position
+        pos(2) = yPos - pos(4) + layout.ebHeight;
+    end
+    
+    % Adjust width
+    pos(3) = winWidth - pos(1) - layout.sWidth - 2 * layout.xMargin0;
+    
+    set(h2, 'Position', pos);
+    
+end
+
+function AdjustTablePosAndSize(h2, winWidth)
+%% Adjust position and size of the table to fit the panel size
+
+    global layout yPos
+
+    pos = get(h2, 'Position');
+    x = pos(1);
+
+    % Compute position and size of the table for the case of infinite available space
+    numDataCols = length(get(h2, 'ColumnName'));
+    w = layout.tcHdrWidth + numDataCols * layout.tcWidth; 
+    numDataRows = length(get(h2, 'Data'));
+    h = layout.trHdrHeight + numDataRows * layout.trHeight;
+
+    % Update the table width according to the available horizontal space
+    maxX = winWidth - layout.sWidth - 3 * layout.xMargin0;
+    if x + w > maxX
+        % The table is too wide for the figure.
+        % The horizontal slider will be created making the table height bigger.
+        w = maxX - x;
+        h = h + layout.tHorSliderHeight;
+    end
+
+    % Compute the table bottom coordinate
+    y = yPos - h + layout.tYMargin;
+
+    % Update the table height according to the available vertical space
+    minY = layout.bsHeight + layout.pbHeight + 3 * layout.yMargin0;
+    if (y < minY) && (y + h > minY)
+        % The table is too high for the figure.
+        % The vertical slider will be created, but it will not make the table width bigger.
+        y = minY;
+        h = yPos + layout.ebHeight - y;
+    end
+
+    pos = [x, y, w, h];
+    set(h2, 'Position', pos);
+    
 end

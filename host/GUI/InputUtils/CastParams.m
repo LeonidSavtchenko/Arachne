@@ -10,7 +10,9 @@ function CastParams()
     global importSTDP stdp_factor t_start_factor t_end_factor
     global watchedExtraCurrentNum_e watchedExtraCurrentIdx_e
     global watchedExtraCurrentNum_i watchedExtraCurrentIdx_i
-     
+    global watchedModCurrentNum_e watchedModCurrentIdx_e
+    global watchedModCurrentNum_i watchedModCurrentIdx_i
+    
     %% Add all parameters to current workspace and cast scalars to single type if Single Precision Arithmetics must be used
     % Loop by panels
     for panIdx_ = 1 : length(params)
@@ -20,20 +22,19 @@ function CastParams()
             eval(['global ', varname]);
             handlers = params{panIdx_}{parIdx}.handlers;
             
-            try
-                style = get(handlers(2), 'Style');
-            catch
-                style = 'uitable';
-            end
-            if useSPA && (strcmp(style, 'edit') || strcmp(style, 'uitable'))
-                % The check isnumeric is necessary for string vectors and function handles
-                eval(sprintf('if isnumeric(%s) %s = single(%s); end', varname, varname, varname));
-                % Cast to int32 if needed
-                eval(sprintf('%s = params{panIdx_}{parIdx}.caster(%s);', varname, varname));
-            elseif strcmp(style, 'checkbox')
-                eval(sprintf('%s = logical(%s);', varname, varname));
-            elseif strcmp(style, 'popupmenu')
-                eval(sprintf('%s = int32(%s);', varname, varname));
+            style = GetUIControlStyle(handlers(2));
+            switch style
+                case {'edit', 'mledit', 'uitable'}
+                    if useSPA
+                        % The check isnumeric is necessary for string vectors and function handles
+                        eval(sprintf('if isnumeric(%s) %s = single(%s); end', varname, varname, varname));
+                        % Cast to int32 if needed
+                        eval(sprintf('%s = params{panIdx_}{parIdx}.caster(%s);', varname, varname));
+                    end
+                case 'checkbox'
+                    eval(sprintf('%s = logical(%s);', varname, varname));
+                case 'popupmenu'
+                    eval(sprintf('%s = int32(%s);', varname, varname));
             end
         end
     end
@@ -80,6 +81,11 @@ function CastParams()
     watchedExtraCurrentNum_i = int32(watchedExtraCurrentNum_i);
     watchedExtraCurrentIdx_i = int32(watchedExtraCurrentIdx_i);
    
+    watchedModCurrentNum_e = int32(watchedModCurrentNum_e);
+    watchedModCurrentIdx_e = int32(watchedModCurrentIdx_e);
+   
+    watchedModCurrentNum_i = int32(watchedModCurrentNum_i);
+    watchedModCurrentIdx_i = int32(watchedModCurrentIdx_i);
     
     %% Cast the parameter that has different meaning in GUI and worker
     freqDelay = int32(freqDelay);

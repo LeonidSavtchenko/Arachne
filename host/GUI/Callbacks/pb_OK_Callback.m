@@ -27,7 +27,9 @@ function pb_OK_Callback(~, ~)
         % Translate all the MOD files to C++ source and header files for both "e" and "i" neurons,
         % deploy the files to the worker source directory,
         % then build the worker
-        TranslateModFilesDeployCppFilesAndBuildWorker();
+        success = TranslateModFilesDeployCppFilesAndBuildWorker();
+        
+        assert(success, 'Failed to build HPC kernel');
     end
     
     % Save input parameters

@@ -160,4 +160,12 @@ function ReadAndVisualizeResults()
         PlotWatchedCurves(time, watchedExtraCurrentIdx_i, watchedExtraCurrentI_i, plotI_iStyle, 'ExtraCurrent (i-%s)', 'ExtraCurrent\_i', 'i-cell');
     end
     
+    if importMod_e && watchedModCurrentNum_e > 0
+        % Plot the curve of ModCurrent vs time for selected e-neurons
+        PlotWatchedCurves(time, watchedModCurrentIdx_e, watchedModCurrentI_e, plotI_eStyle, 'ModCurrent (e-%s)', 'sumModCurrents\_e', 'e-cell');
+    end
+    if importMod_i && watchedModCurrentNum_i > 0
+        % Plot the curve of ModCurrent vs time for selected e-neurons
+        PlotWatchedCurves(time, watchedModCurrentIdx_i, watchedModCurrentI_i, plotI_iStyle, 'ModCurrent (i-%s)', 'sumModCurrents\_i', 'i-cell');
+    end
 end

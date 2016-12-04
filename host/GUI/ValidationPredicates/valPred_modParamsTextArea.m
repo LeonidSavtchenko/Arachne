@@ -64,7 +64,7 @@ function valid = Validate(modFileNameToUninitParamsNamesStruct, textAreaParamsSt
             assignedParamValue = textAreaParamsForModFile.(uninitParamName);
             
             try
-            	valid_ = isnumeric(assignedParamValue) && ~isnan(assignedParamValue) && ~isinf(assignedParamValue) && isreal(assignedParamValue);
+                valid_ = isnumeric(assignedParamValue) && ~isnan(assignedParamValue) && ~isinf(assignedParamValue) && isreal(assignedParamValue);
             catch
                 % Bad assigned value (array)
                 return

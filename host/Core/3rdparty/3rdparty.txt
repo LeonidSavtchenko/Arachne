@@ -7,4 +7,3 @@ host\Core\3rdparty\7za.exe              http://www.7-zip.org/download.html
 
 Source code file                        Function            Downloaded from
 host\Core\InputDataUtils\normpdf.m      normpdf             http://www.mathworks.com/matlabcentral/fileexchange/21903-mphys/content/mPhys/Stats/normpdf.m
-host\Core\OtherUtils\strjoin.m          strjoin             http://www.mathworks.com/matlabcentral/fileexchange/39143-strjoin/content/strjoin.m

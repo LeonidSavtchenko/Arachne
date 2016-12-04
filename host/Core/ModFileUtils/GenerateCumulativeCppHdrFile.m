@@ -2,94 +2,38 @@ function GenerateCumulativeCppHdrFile(modFileNames_e, modFileNames_i, outDirPath
 
     outFileName = 'AllModCurrents.h';
     
-    fprintf('Generating %s ...\n', outFileName);
+    fprintf('    Generating %s ...\n', outFileName);
     
     lenModFileNames_e = length(modFileNames_e);
     lenModFileNames_i = length(modFileNames_i);
     
-    hdrSize = 20;
-    numLines = hdrSize + lenModFileNames_e + 1 + lenModFileNames_i;
-    outFileLines = {numLines, 1};
+    outFileLines = {};
     
-    outFileLines{1, 1} = '#pragma once';
-    outFileLines{2, 1} = '';
-    
+    outFileLines{end + 1, 1} = '#pragma once';
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = '#include <vector>';
+    outFileLines{end + 1, 1} = '#include <memory>';
+    outFileLines{end + 1, 1} = '#include <tuple>';
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = '#include "Containers/DistVector.h"';
+    outFileLines{end + 1, 1} = '';
+ 
     for i = 1 : lenModFileNames_e
-        outFileLines{2 + i, 1} = sprintf('#include "%s.h"', modFileNames_e{i});
+        outFileLines{end + 1, 1} = sprintf('#include "%s.h"', modFileNames_e{i}); %#ok<AGROW>
     end
     
-    outFileLines{lenModFileNames_e + 3, 1} = '';
+    outFileLines{end + 1, 1} = '';
     
-    for j = 1 : lenModFileNames_i
-        outFileLines{lenModFileNames_e + 3 + j, 1} = sprintf('#include "%s.h"', modFileNames_i{j});
-    end
-     
-    currIdx = lenModFileNames_e + 3 + lenModFileNames_i;
-    
-    outFileLines{currIdx + 1, 1} = 'template<typename ... Types>';
-    outFileLines{currIdx + 2, 1} = 'class VariadicTemplate : public Types ...'; 
-    outFileLines{currIdx + 3, 1} = '{';
-    outFileLines{currIdx + 4, 1} = 'public:';
-    outFileLines{currIdx + 5, 1} = '';
-    outFileLines{currIdx + 6, 1} = 'VariadicTemplate(... ) : Types()... {}';
-    outFileLines{currIdx + 7, 1} = '';
-    outFileLines{currIdx + 8, 1} = '};';
-    outFileLines{currIdx + 9, 1} = '';
-   
-    if ~isempty(modFileNames_e)
-        typeNamesStr_e = '';
-       
-        if(lenModFileNames_e == 1)
-            typeNamesStr_e = [typeNamesStr_e, 'mod::', modFileNames_e{1},'<T>'];
-        else
-            typeNamesStr_e = [typeNamesStr_e, 'mod::', modFileNames_e{1},'<T>'];
-            
-            for i = 2 : length(modFileNames_e)
-                typeNamesStr_e = [typeNamesStr_e, ', ', 'mod::', modFileNames_e{i},'<T>'];  %#ok<AGROW>
-            end
-        end
-        
-        outFileLines{currIdx + 10, 1} = ['template<typename T> using t_AllModCurrents_e = VariadicTemplate<', ...
-            typeNamesStr_e, '>;'];
-        
-        outFileLines{currIdx + 11, 1} = 'template<typename T>';
-        outFileLines{currIdx + 12, 1} = 'class AllModCurrents_e : public t_AllModCurrents_e<T>';
-        outFileLines{currIdx + 13, 1} = '{};';
-    else
-        outFileLines{currIdx + 10, 1} = '';
-        outFileLines{currIdx + 11, 1} = '';
-        outFileLines{currIdx + 12, 1} = '';
-        outFileLines{currIdx + 13, 1} = '';
+    for i = 1 : lenModFileNames_i
+        outFileLines{end + 1, 1} = sprintf('#include "%s.h"', modFileNames_i{i}); %#ok<AGROW>
     end
     
-    outFileLines{currIdx + 14, 1} = '';
-
-    if ~isempty(modFileNames_i)
-        typeNamesStr_i = '';
-      
-        if(lenModFileNames_i == 1)
-            typeNamesStr_i = [typeNamesStr_i, 'mod::', modFileNames_i{1},'<T>'];
-        else
-            typeNamesStr_i = [typeNamesStr_i, 'mod::', modFileNames_i{1},'<T>'];
-            
-            for i = 2 : length(modFileNames_i)
-                typeNamesStr_i = [', ', typeNamesStr_i, 'mod::', modFileNames_i{i},'<T>'];  %#ok<AGROW>
-            end
-        end
-        outFileLines{currIdx + 15, 1} = ['template<typename T> using t_AllModCurrents_i = VariadicTemplate<', ...
-            typeNamesStr_i, '>;'];
-        
-        outFileLines{currIdx + 16, 1} = 'template<typename T>';
-        outFileLines{currIdx + 17, 1} = 'class AllModCurrents_i : public t_AllModCurrents_i<T>';
-        outFileLines{currIdx + 18, 1} = '{};';
-    else
-        outFileLines{currIdx + 15, 1} = '';
-        outFileLines{currIdx + 16, 1} = '';
-        outFileLines{currIdx + 17, 1} = '';
-        outFileLines{currIdx + 18, 1} = '';
-    end
-    
-    outFileLines{currIdx + 19, 1} = '';
+    outFileLines{end + 1, 1} = '';
+    outFileLines = GenerateBaseCppClass(outFileLines);
+    outFileLines{end + 1, 1} = '';
+    outFileLines = GenerateChildCppClass(outFileLines, modFileNames_e, 'e');
+    outFileLines{end + 1, 1} = '';
+    outFileLines = GenerateChildCppClass(outFileLines, modFileNames_i, 'i');
 
     outFilePath = fullfile(outDirPath, outFileName);
     fid = fopen(outFilePath, 'w+');
@@ -101,6 +45,256 @@ function GenerateCumulativeCppHdrFile(modFileNames_e, modFileNames_i, outDirPath
         fprintf(fid, '%s\r\n', outFileLines{i});
     end
     
-    fclose(fid);
+    fclose(fid); 
+end
+
+function outFileLines = GenerateBaseCppClass(outFileLines)
+    
+    outFileLines{end + 1, 1} = 'template <typename T>';
+    outFileLines{end + 1, 1} = 'class AllModCurrents';
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '    public:';
+    outFileLines{end + 1, 1} = '    AllModCurrents() = default;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    virtual void SetVoltage(const DistVector<T>& v) { }'; %!!
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    virtual DistVector<T> GetSumCurrent(int length)';
+    outFileLines{end + 1, 1} = '    {';
+    outFileLines{end + 1, 1} = '        DistVector<T> I(length);';
+    outFileLines{end + 1, 1} = '        I.AssignZeros();';
+    outFileLines{end + 1, 1} = '        ';
+    outFileLines{end + 1, 1} = '        return I;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    virtual DistVector<T> DoOneStepPart1(const DistVector<T>& v, T dt05)';
+    outFileLines{end + 1, 1} = '    {';
+    outFileLines{end + 1, 1} = '        DistVector<T> I(v.length);';
+    outFileLines{end + 1, 1} = '        I.AssignZeros();';
+    outFileLines{end + 1, 1} = '        ';
+    outFileLines{end + 1, 1} = '        return I;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    virtual DistVector<T> DoOneStepPart2(const DistVector<T> &v, const DistVector<T> &v_tmp, T dt05)';
+    outFileLines{end + 1, 1} = '    {';
+    outFileLines{end + 1, 1} = '        DistVector<T> I(v.length);';
+    outFileLines{end + 1, 1} = '        I.AssignZeros();';
+    outFileLines{end + 1, 1} = '        ';
+    outFileLines{end + 1, 1} = '        return I;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '};';
+end
+
+function outFileLines = GenerateChildCppClass(outFileLines, modFileNames, neuronType)
+
+    outFileLines{end + 1, 1} = 'template <typename T>';
+    outFileLines{end + 1, 1} = ['class AllModCurrents_', neuronType, ' : public AllModCurrents<T>'];
+    
+    if isempty(modFileNames)
+        outFileLines{end + 1, 1} = '{';
+        outFileLines{end + 1, 1} = 'public:';
+        outFileLines{end + 1, 1} = ['    AllModCurrents_', neuronType, '(int num_', neuronType, ') { }'];
+        outFileLines{end + 1, 1} = '};';
+        return
+    end
+
+    lenModFileNames = length(modFileNames);
+
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = 'public:';
+    
+    %************************* Custom constructor *************************%
+    outFileLines{end + 1, 1} = ['    AllModCurrents_', neuronType, '(int num_', neuronType, ')'];
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '';
+    argMakeTuple = '';
+    argMakeTuple = [argMakeTuple, 'std::make_shared<DistVector<mod::', modFileNames{1}, '<T>>>(num_', neuronType, ')']; 
+    if lenModFileNames > 1
+        for i = 2 : lenModFileNames
+            argMakeTuple = [argMakeTuple, ', std::make_shared<DistVector<mod::', modFileNames{i}, '<T>>>(num_', neuronType, ')']; %#ok<AGROW>
+        end
+    end
      
+    outFileLines{end + 1, 1} = ['    m_modCurrents = std::make_tuple(', argMakeTuple, ');'];
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = '}';
+    outFileLines{end + 1, 1} = '';
+    %**********************************************************************%
+
+    %***************************** SetVoltage *****************************%
+    outFileLines{end + 1, 1} = 'virtual void SetVoltage(const DistVector<T>& v) override';
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '    using namespace DistEnv;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int localLength = v.localLength;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int myThread = omp_get_thread_num();';
+    outFileLines{end + 1, 1} = '    int startIdx = GetThreadChunkStartIdx(localLength, myThread);';
+    outFileLines{end + 1, 1} = '    int endIdx = GetThreadChunkStartIdx(localLength, myThread + 1);';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['    auto& currModCurrent_', int2str(i - 1), ' = *std::get<', ...
+            int2str(i - 1), '>(m_modCurrents);']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '    for (int idx = startIdx; idx < endIdx; idx++)';
+    outFileLines{end + 1, 1} = '    {';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        auto& cModCurr_', int2str(i - 1), ' = currModCurrent_', ...
+            int2str(i - 1), '[idx];']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.v = v[idx];']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '}';
+    outFileLines{end + 1, 1} = '';
+    %**********************************************************************%
+    
+    %**************************** GetSumCurrent ***************************%
+    outFileLines{end + 1, 1} = 'virtual DistVector<T> GetSumCurrent(int length) override';
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '    using namespace DistEnv;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    DistVector<T> I(length);';
+    outFileLines{end + 1, 1} = '    I.AssignZeros();';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int localLength = I.localLength;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int myThread = omp_get_thread_num();';
+    outFileLines{end + 1, 1} = '    int startIdx = GetThreadChunkStartIdx(localLength, myThread);';
+    outFileLines{end + 1, 1} = '    int endIdx = GetThreadChunkStartIdx(localLength, myThread + 1);';
+    outFileLines{end + 1, 1} = '    ';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['    auto& currModCurrent_', int2str(i - 1),' = *std::get<',...
+            int2str(i - 1), '>(m_modCurrents);']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    T I_tmp;';
+    outFileLines{end + 1, 1} = '    for (int idx = startIdx; idx < endIdx; idx++)';
+    outFileLines{end + 1, 1} = '    {';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        auto& cModCurr_', int2str(i - 1), ' = currModCurrent_', ...
+            int2str(i - 1), '[idx];']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.currents();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        ';
+    outFileLines{end + 1, 1} = '        I_tmp = T(0);';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        I_tmp += ', 'cModCurr_', int2str(i - 1), ...
+            '.getResCurrent();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        I[idx] = I_tmp;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    return I;';
+    outFileLines{end + 1, 1} = '}';
+    outFileLines{end + 1, 1} = '';
+    %**********************************************************************%
+    
+    %*************************** DoOneStepPart1 ***************************%
+    outFileLines{end + 1, 1} = 'virtual DistVector<T> DoOneStepPart1(const DistVector<T>& v, T dt05) override';
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '    using namespace DistEnv;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    DistVector<T> I(v.length);';
+    outFileLines{end + 1, 1} = '    I.AssignZeros();';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int localLength = I.localLength;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int myThread = omp_get_thread_num();';
+    outFileLines{end + 1, 1} = '    int startIdx = GetThreadChunkStartIdx(localLength, myThread);';
+    outFileLines{end + 1, 1} = '    int endIdx = GetThreadChunkStartIdx(localLength, myThread + 1);';
+    outFileLines{end + 1, 1} = '';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['    auto& currModCurrent_', int2str(i - 1), ' = *std::get<', ...
+            int2str(i - 1), '>(m_modCurrents);']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    T I_tmp;';
+    outFileLines{end + 1, 1} = '    for (int idx = startIdx; idx < endIdx; idx++)';
+    outFileLines{end + 1, 1} = '    {';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        auto& cModCurr_', int2str(i - 1), ...
+            ' = currModCurrent_', int2str(i - 1), '[idx];']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.v = v[idx];']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.init();']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.states();']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.integrate(dt05);']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.currents();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        I_tmp = T(0);';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        I_tmp += ', 'cModCurr_', int2str(i - 1), ...
+            '.getResCurrent();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        I[idx] = I_tmp;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    return I;';
+    outFileLines{end + 1, 1} = '}';
+    outFileLines{end + 1, 1} = '';
+    %**********************************************************************%
+    
+    %*************************** DoOneStepPart2 ***************************%
+    outFileLines{end + 1, 1} = 'virtual DistVector<T> DoOneStepPart2(const DistVector<T> &v, const DistVector<T> &v_tmp, T dt05) override';
+    outFileLines{end + 1, 1} = '{';
+    outFileLines{end + 1, 1} = '    using namespace DistEnv;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    DistVector<T> I(v.length);';
+    outFileLines{end + 1, 1} = '    I.AssignZeros();';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int localLength = v.localLength;';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    int myThread = omp_get_thread_num();';
+    outFileLines{end + 1, 1} = '    int startIdx = GetThreadChunkStartIdx(localLength, myThread);';
+    outFileLines{end + 1, 1} = '    int endIdx = GetThreadChunkStartIdx(localLength, myThread + 1);';
+    outFileLines{end + 1, 1} = '    ';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['    auto& currModCurrent_', int2str(i - 1), ' = *std::get<', ...
+            int2str(i - 1), '>(m_modCurrents);']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    T I_tmp;';
+    outFileLines{end + 1, 1} = '    for (int idx = startIdx; idx < endIdx; idx++)';
+    outFileLines{end + 1, 1} = '    {';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        auto& cModCurr_', int2str(i - 1), ...
+            ' = currModCurrent_', int2str(i - 1), '[idx];']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.v = v_tmp[idx];']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.init();']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.states();']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.integrate(dt05);']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.v = v[idx];']; %#ok<AGROW>
+        outFileLines{end + 1, 1} = ['        cModCurr_', int2str(i - 1), '.currents();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        ';
+    outFileLines{end + 1, 1} = '        I_tmp = T(0);';
+    for i = 1 : lenModFileNames
+        outFileLines{end + 1, 1} = ['        I_tmp += ', 'cModCurr_', int2str(i - 1), ...
+            '.getResCurrent();']; %#ok<AGROW>
+    end
+    outFileLines{end + 1, 1} = '        I[idx] = I_tmp;';
+    outFileLines{end + 1, 1} = '    }';
+    outFileLines{end + 1, 1} = '    ';
+    outFileLines{end + 1, 1} = '    return I;';
+    outFileLines{end + 1, 1} = '}';
+    %**********************************************************************%
+    
+    %**************************** Private part ****************************%
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = 'private:';
+    outFileLines{end + 1, 1} = ['    const std::size_t sizeCurrents = ', int2str(lenModFileNames), ';'];
+    argTuple = '';
+    argTuple = [argTuple, 'std::shared_ptr<DistVector<mod::', modFileNames{1}, '<T>>>']; 
+    if lenModFileNames > 1
+        for i = 2 : lenModFileNames
+            argTuple = [argTuple, ', std::shared_ptr<DistVector<mod::', modFileNames{i}, '<T>>>'];  %#ok<AGROW>
+        end
+    end
+    outFileLines{end + 1, 1} = ['    std::tuple<', argTuple,'> m_modCurrents;'];
+    outFileLines{end + 1, 1} = '};';
+    %**********************************************************************%
 end

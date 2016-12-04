@@ -12,7 +12,8 @@ function PrepareInputFromGUI()
     global distMatPVH
     
     global watchedExtraCurrentNum_e watchedExtraCurrentNum_i 
-    
+    global watchedModCurrentNum_e watchedModCurrentNum_i 
+     
     % Referred from relevancy prediates
     global startFromScratch %#ok<NUSED>
     
@@ -139,6 +140,14 @@ function PrepareInputFromGUI()
     
     if enableExtraCurrent_i
         input = [input; 'watchedExtraCurrentNum_i'];
+    end
+    
+    if importMod_e
+        input = [input; 'watchedModCurrentNum_e'];
+    end
+    
+    if importMod_i
+        input = [input; 'watchedModCurrentNum_i'];
     end
     
     if fakeMPI

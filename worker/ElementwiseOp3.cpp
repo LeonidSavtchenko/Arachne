@@ -16,7 +16,7 @@ void GammaSimulator<T, RNGT>::ElementwiseOperation3()
 
     if (importMod_e)
     {
-        //!!modCurrent_e.DoOneStepPart2(iter, v_e, v_e_tmp);
+        modCurrent_e.DoOneStepPart2(iter, v_e, v_e_tmp);
     }
 
     int myThread = omp_get_thread_num();

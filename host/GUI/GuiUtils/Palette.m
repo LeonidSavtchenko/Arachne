@@ -1,5 +1,5 @@
 function Palette()
-%% Initialize constants for color palette
+%% Initialize global constants for color palette
 
     global palette
     
@@ -13,6 +13,6 @@ function Palette()
     palette.tableInvalidColor = [1, 0.5, 0.5;
                                  0.8, 0.4, 0.5];
                             
-    palette.gray = [0.5, 0.5, 0.5];
+    palette.stripColor = [0.5, 0.5, 0.5];
 
 end

@@ -1,12 +1,16 @@
-function MonitorBackgroundProcess()
-%% Do monitoring of the background simulation process
+function completed = MonitorBackgroundProcess()
+%% Do monitoring of the background simulation process.
+%  This scripts normally waits until the simulation completes,
+%  but it returns after the first report in the mobile mode.
 
-    global c4sPeriodSec
+    global c4sPeriodSec mobileMode
     
-    fprintf('Start monitoring with a delay of %s sec. between requests ...\n', num2str(c4sPeriodSec));
+    fprintf('Start monitoring with a delay of %i sec. between requests ...\n', c4sPeriodSec);
     
     % Wait
     pause(c4sPeriodSec);
+    
+    reported = false;
     
     while true
         % Read and print current progress
@@ -15,6 +19,7 @@ function MonitorBackgroundProcess()
         progress = GetCurrentProgress();
         if ~isempty(progress)
             disp(progress);
+            reported = true;
         end
         
         % Wait
@@ -27,8 +32,16 @@ function MonitorBackgroundProcess()
             disp('The last progress reported by HPC kernel:');
             progress = GetCurrentProgress();
             disp(progress);
+            completed = true;
+            break
+        end
+        
+        if mobileMode && reported
+            % Matlab mobile shows all the messages only after the script exits,
+            % so we report progress only once and exit
+            completed = false;
             break
         end
     end
-    
+        
 end

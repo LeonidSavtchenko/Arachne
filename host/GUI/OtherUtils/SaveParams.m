@@ -11,55 +11,24 @@ function SaveParams(filename)
         % Loop by all parameters of this panel
         for parIdx = 1 : length(params{panIdx_})
             
-            varname = params{panIdx_}{parIdx}.name;
+            varName = params{panIdx_}{parIdx}.name;
             handlers = params{panIdx_}{parIdx}.handlers;
             
-            try
-                style = get(handlers(2), 'Style');
-            catch
-                style = 'uitable';
-            end
+            h2 = handlers(2);
+            [value, style, ~] = GetUIControlValue(h2); %#ok<ASGLU>
             
-            if strcmp(style, 'edit')
-                field = 'String';
-            elseif strcmp(style, 'checkbox') || strcmp(style, 'popupmenu')
-                field = 'Value';
-            elseif strcmp(style, 'uitable')
-                field = 'Data';
-           elseif strcmp(style, 'pushbutton')
-                % TODO:
-                field = 'String';
-            else
-                assert(false);
-            end
-            
-            value = get(handlers(2), field);
-            
-            if strcmp(style, 'edit') && size(value, 1) > 1
-                % Join char array into the single string
-                nRows = size(value, 1);
-                str = strtrim(value(1, :));
-                for row = 2 : nRows
-                    try
-                        str = sprintf('%s\n%s', str, strtrim(value(row, :)));
-                    catch
-                        % !!
-                    end
-                end
-                value = str; %#ok<NASGU>
-            end
-            
-            if strcmp(style, 'checkbox')
-                cmd = sprintf('%s = logical(value);', varname);
-            elseif strcmp(style, 'popupmenu')
-                cmd = sprintf('%s = int32(value);', varname);
-            else
-                cmd = sprintf('%s = value;', varname);
+            switch style
+                case 'checkbox'
+                    cmd = sprintf('%s = logical(value);', varName);
+                case 'popupmenu'
+                    cmd = sprintf('%s = int32(value);', varName);
+                otherwise
+                    cmd = sprintf('%s = value;', varName);
             end
             
             eval(cmd);
     
-            output = [output; varname];
+            output = [output; varName];
         end
     end
     

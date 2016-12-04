@@ -1,4 +1,3 @@
-
 #include <math.h>
 
 %INCLUDE_HEADER

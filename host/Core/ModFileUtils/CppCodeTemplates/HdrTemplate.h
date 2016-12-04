@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\ModCurrentsBase.h"
+#include "../ModCurrentsBase.h"
 
 #include <vector>
 
@@ -19,16 +19,16 @@ public:
     // ASSIGNED (public)
 
     // INITIAL
-    void init();
+    virtual void init() override;
 
     // DERIVATIVE
-    void states();
+    virtual void states() override;
 
     // BREAKPOINT
-    void currents();
+    virtual void currents() override;
 
 private:
-    //FREE LOCAL VARIABLES
+    // FREE LOCAL VARIABLES
     %FREE_LOCAL_VARIABLES
 
     %CONSTANT_NAMES

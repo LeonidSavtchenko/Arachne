@@ -25,8 +25,10 @@ function ValidateAndPreprocessParams()
     global watchedSynNum_ee watchedSynNum_ei watchedSynNum_ie watchedSynNum_ii
     global enableAstro watchedAstroIdx watchedAstroNum 
     global enableExtraCurrent_e watchedExtraCurrentIdx_e watchedExtraCurrentNum_e 
-    global enableExtraCurrent_i watchedExtraCurrentIdx_i watchedExtraCurrentNum_i 
-      
+    global enableExtraCurrent_i watchedExtraCurrentIdx_i watchedExtraCurrentNum_i   
+    global importMod_e watchedModCurrentIdx_e watchedModCurrentNum_e 
+    global importMod_i watchedModCurrentIdx_i watchedModCurrentNum_i 
+    
     CheckScmParams('ee', g_hat_ee, w_ee_max, scmType_ee);
     CheckScmParams('ei', g_hat_ei, w_ei_max, scmType_ei);
     CheckScmParams('ie', g_hat_ie, w_ie_max, scmType_ie);
@@ -86,6 +88,8 @@ function ValidateAndPreprocessParams()
     watchedAstroNum = length(watchedAstroIdx);
     watchedExtraCurrentNum_e = length(watchedExtraCurrentIdx_e);
     watchedExtraCurrentNum_i = length(watchedExtraCurrentIdx_i);
+    watchedModCurrentNum_e = length(watchedModCurrentIdx_e);
+    watchedModCurrentNum_i = length(watchedModCurrentIdx_i);
     watchedSynNum_ee = size(watchedSynIdx_ee, 1);
     watchedSynNum_ei = size(watchedSynIdx_ei, 1);
     watchedSynNum_ie = size(watchedSynIdx_ie, 1);
@@ -104,6 +108,12 @@ function ValidateAndPreprocessParams()
     end
     if enableExtraCurrent_i
         watchedExtraCurrentIdx_i = CheckAndPreprocWathedCellParams(watchedExtraCurrentIdx_i, num_i, 'i-cell');
+    end
+    if importMod_e
+        watchedModCurrentIdx_e = CheckAndPreprocWathedCellParams(watchedModCurrentIdx_e, num_e, 'e-cell');
+    end
+    if importMod_i
+        watchedModCurrentIdx_i = CheckAndPreprocWathedCellParams(watchedModCurrentIdx_i, num_i, 'i-cell');
     end
     
     %% Validate parameters of random number generators

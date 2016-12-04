@@ -7,23 +7,8 @@ function generic_Callback(hObject, ~)
     panIdx = userData(1);
     parIdx = userData(2);
     
-    try
-        style = get(hObject, 'Style');
-    catch
-        style = 'uitable';
-    end
-    
-    if strcmp(style, 'edit')
-        field = 'String';
-    elseif strcmp(style, 'checkbox') || strcmp(style, 'popupmenu')
-        field = 'Value';
-    elseif strcmp(style, 'uitable')
-        field = 'Data';
-    else
-        assert(false);
-    end
-    
-    params{panIdx}{parIdx}.value = get(hObject, field);
+    value = GetUIControlValue(hObject);
+    params{panIdx}{parIdx}.value = value;
 
     % The main controls
     UpdateViewControls();

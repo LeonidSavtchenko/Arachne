@@ -1,20 +1,33 @@
 #include "ModCurrent.h"
 
-// Each CPP-file below contains partial implementation of ExtraCurrent class
+// Each CPP-file below contains partial implementation of ModCurrent class
 #include "MCurReadAllocateWrite.cpp"
 #include "MCurDoOneStepPart1.cpp"
 #include "MCurDoOneStepPart2.cpp"
 
 // Default constructor
-template <typename T>
-ModCurrent<T>::ModCurrent()
+template <typename T, typename RNGT>
+ModCurrent<T, RNGT>::ModCurrent()
 {
 }
 
 // Custom constructor
-template <typename T>
-ModCurrent<T>::ModCurrent(char suffix, T dt, bool continuationMode, bool enable, int num, const DistVector<T> &v, int m_steps_prev, int m_steps)
+template <typename T, typename RNGT>
+ModCurrent<T, RNGT>::ModCurrent(char suffix, T dt, bool continuationMode, bool enable, int num, const DistVector<T> &v, int m_steps_prev, int m_steps)
 {
+    if (suffix == 'e')
+    {
+        p_AllModCurrents = std::make_shared<AllModCurrents_e<T>>(num);
+    }
+    else if(suffix == 'i')
+    {
+        p_AllModCurrents = std::make_shared<AllModCurrents_i<T>>(num);
+    }
+    else
+    {
+        p_AllModCurrents = nullptr;
+    }
+
     this->suffix = suffix;
     this->dt = dt;
     this->dt05 = dt / 2;
@@ -26,7 +39,10 @@ ModCurrent<T>::ModCurrent(char suffix, T dt, bool continuationMode, bool enable,
 }
 
 template
-class ModCurrent<float>;
+class ModCurrent<float, std::mt19937>;
 
 template
-class ModCurrent<double>;
+class ModCurrent<double, std::mt19937>;
+
+template
+class ModCurrent<double, std::mt19937_64>;

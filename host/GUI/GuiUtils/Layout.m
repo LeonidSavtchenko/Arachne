@@ -1,41 +1,55 @@
 function Layout()
-%% Initialize constants for GUI layout
+%% Initialize global constants for GUI layout (all in pixels)
 
     global layout
     
-    layout.xMargin0 = 10;   % The distance "window border - panel border"
-    layout.xMargin1 = 10;   % The distance "panel border - param name text"
-    layout.xMargin2 = 5;    % The distance "param name text - value control"
-    layout.xMargin3 = 10;   % The distance "value edit box - unit text"
+    layout.xMargin0 = 10;       % The distance "window border - panel border"
+    layout.xMargin1 = 10;       % The distance "panel border - param name text"
+    layout.xMargin2 = 5;        % The distance "param name text - value control"
+    layout.xMargin3 = 10;       % The distance "value edit box - unit text"
     
-    layout.yMargin0 = 10;   % The distance between two controls
+    layout.yMargin0 = 10;       % The distance between two controls
     
-    layout.rgWidth = 126;   % Radiogroup panel width
-    layout.nameWidth = 135; % Param name width
+    layout.rgWidth = 140;       % Radiogroup panel width
+    layout.rbHeight = 23;       % Radiobutton height
     
-    layout.nameTableWidth = 21;	% The width of the first column of the table
- 
-    layout.ebWidth = 200;   % Param editbox width
-    layout.unitWidth = 95;  % Unit text width
+    % Sizes of main controls for parameters
+    layout.ebWidth = 200;       % Editbox width
+    layout.ebHeight = 23;       % Editbox height
+    layout.cbHeight = 23;       % Checkbox height
+    layout.pmHeight = 20;       % Popup menu height
+    layout.tcHdrWidth = 167;    % Table header column width (plus table rightmost border line width)
+    layout.trHdrHeight = 22;    % Table header row height (plus table bottom border line width)
+    layout.tcWidth = 75;        % Table data column width
+    layout.trHeight = 18;       % Table data row height
+    layout.tHorSliderHeight = 17;   % Table horizontal slider height
+    layout.mptaHeight = 214;        % MOD parameters text area height
     
-    layout.yStep = 30;      % Y-step for controls placement
+    % Sizes of auxiliary controls for parameters
+    layout.nameWidth = 135;     % Parameter name width
+    layout.unitWidth = 95;      % Unit text width
+    layout.tHeight = 22;        % Text label height
     
-    layout.rbHeight = 23;   % Radiobutton height
-    layout.pbWidth = 69;    % Pushbutton width ("Load", "Save", "OK")
-    layout.pbHeight = 22;   % Pushbutton height ("Load", "Save", "OK")
-    layout.bsHeight = 2;    % Height of blank strips
-    layout.sWidth = 17;     % Slider width
-    layout.ebHeight = 23;   % Editbox height
-    layout.tHeight = 22;    % Text label height
-    layout.cbHeight = 23;   % Checkbox height
-    layout.pmHeight = 20;   % Popup menu height
-    layout.trHeight = 19.1; % Table row height
-    layout.tcWidth = 89.3;  % Table column width
-    layout.mptaHeight = 214;    % MOD parameters text area height
-   
-    layout.ebYMargin = 4;   % Additional space between editbox (checkbox) and controls
-    layout.pmYMargin = 7;   % Additional space between popup menu and controls
-    layout.tYMargin = 7;    % Additional space between table and controls
-    layout.mspbYMargin = 6; % Additional space between MOD files selector pushbutton and controls
+    layout.yStep = 30;          % Y-step for controls placement
+    
+    % Non-parameter controls sizes
+    layout.pbWidth = 69;        % Pushbutton width ("Load", "Save", "OK")
+    layout.pbHeight = 22;       % Pushbutton height ("Load", "Save", "OK")
+    layout.bsHeight = 2;        % Height of blank strips
+    layout.sWidth = 17;         % Rightmost slider width
+    
+    % Name and Unit labels margins
+    layout.ebNameUnitYMargin = 5;    % Simple editbox name and unit
+    layout.mlebNameYMargin1 = 5;    % Multiline editbox name for panel 1
+    layout.mlebNameYMargin2 = 1;    % Multiline editbox name for other panels
+    layout.cbNameYMargin = 4;       % Checkbox name
+    layout.pmNameYMargin = 8;       % Popup menu name
+    layout.tNameYMargin = 5;        % Table name
+    
+    % Main controls margins
+    layout.mlebYMargin1 = 4;    % Multiline editbox from above
+    layout.mlebYMargin2 = 19;   % Multiline editbox from below
+    layout.tYMargin = 23;       % Table from below
+    layout.mspbYMargin = 6;     % MOD files selector pushbutton from below
 
 end

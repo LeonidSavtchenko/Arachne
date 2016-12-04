@@ -781,6 +781,7 @@ void ReadCheckInMatrix<double>(LocalDenseMatrix<double, std::mt19937> &matrix, c
 template
 void ReadCheckInMatrix<double>(LocalDenseMatrix<double, std::mt19937_64> &matrix, const std::string &name, int numRows, int numCols, MatFile matFile);
 
+
 // ReadCheckBroadcastInMatrix
 
 template

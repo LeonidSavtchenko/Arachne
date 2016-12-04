@@ -15,7 +15,7 @@ function buttonName = QuestDlg(dialogId, question,   title, btn1, btn2, btn3, de
     fieldName = GetFieldName(DialogIds, dialogId);
     try
         % Try to get a predefined choice
-    	buttonName = userChoices.(fieldName);
+        buttonName = userChoices.(fieldName);
     catch
         if mobileMode
             % Interaction with user is impossible

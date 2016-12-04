@@ -53,7 +53,7 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
             for i = 1 : length(params)
                 str = strtrim(params{i});
                 if ~isempty(strfind(str, '='))
-                    headerFile{end + 1, 1} = strcat(['const T ', str], ';'); %#ok<AGROW>
+                    headerFile{end + 1, 1} = strcat(['    const T ', str], ';'); %#ok<AGROW>
                 end
             end
             
@@ -75,15 +75,15 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                     for k = 1 : length(var_names)
                         if strcmp(str, var_names{k})           
                             if isnan(var_values{k})
-                                headerFile{end + 1, 1} = strcat(['const T ', str], ' =', ' std::numeric_limits<T>::quiet_NaN()',';'); %#ok<AGROW>
+                                headerFile{end + 1, 1} = strcat(['    const T ', str], ' =', ' std::numeric_limits<T>::quiet_NaN()',';'); %#ok<AGROW>
                             else
-                                 headerFile{end + 1, 1} = strcat(['const T ', str], ' = (T)', num2str(var_values{k}),';'); %#ok<AGROW>
+                                headerFile{end + 1, 1} = strcat(['    const T ', str], ' = (T)', num2str(var_values{k}),';'); %#ok<AGROW>
                             end
                         end
                     end
                 else
                     split_param = strsplit(str, '=');
-                    headerFile{end + 1, 1} = strcat(['const T ', split_param{1}], ' = (T)' , split_param{2}, ';'); %#ok<AGROW>
+                    headerFile{end + 1, 1} = strcat(['    const T ', split_param{1}], ' = (T)' , split_param{2}, ';'); %#ok<AGROW>
                 end
             end
 
@@ -96,7 +96,7 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 for k = 1 : lenParams - 1
                     cline = [cline, params{k}, ', ']; %#ok<AGROW>
                 end
-                headerFile{end + 1, 1} = ['T ', cline, params{lenParams}, ';']; %#ok<AGROW>
+                headerFile{end + 1, 1} = ['    T ', cline, params{lenParams}, ';']; %#ok<AGROW>
             end
             
         elseif strfind(tline, '%ASSIGNED_NAMES')
@@ -108,7 +108,7 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 for k = 1 : lenParams - 1
                     cline = [cline, params{k}, ', ']; %#ok<AGROW>
                 end
-                headerFile{end + 1, 1} = ['T ', cline, params{lenParams}, ';']; %#ok<AGROW>
+                headerFile{end + 1, 1} = ['    T ', cline, params{lenParams}, ';']; %#ok<AGROW>
             end
             
         elseif strfind(tline, '%DERIVATIVE_NAMES')
@@ -125,9 +125,9 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 end
 
                 if isempty(strfind(params{len_params}, '[')) 
-                    headerFile{end + 1, 1} = ['T ', cline, params{len_params}, '_rhp;']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    T ', cline, params{len_params}, '_rhp;']; %#ok<AGROW>
                 elseif ~isempty(cline)
-                    headerFile{end + 1, 1} = ['T ', cline, '_rhp;']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    T ', cline, '_rhp;']; %#ok<AGROW>
                 end
             end
             
@@ -139,14 +139,14 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 [name, formal_params] = ParseProcedureBlock(proc);
                 
                 if isempty(formal_params{1})
-                    headerFile{end + 1, 1} = ['void ', mod_file_name, '<T>::', name, '();']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    void ', name, '();']; %#ok<AGROW>
                 else 
                     var_names = '';
                     for i = 1 : length(formal_params) - 1
                         var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
                     end
                     var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
-                    headerFile{end + 1, 1} = ['void ', mod_file_name, '<T>::', name, '(', var_names, ');']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    void ', name, '(', var_names, ');']; %#ok<AGROW>
                 end
             end
 
@@ -158,14 +158,14 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 [name, formal_params] = ParseFunctionBlock(func);
                 
                 if isempty(formal_params{1})
-                    headerFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '();']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    T ', name, '();']; %#ok<AGROW>
                 else
                     var_names = '';
                     for i = 1 : length(formal_params) - 1
                         var_names = [var_names, 'T ', formal_params{i}, ', ']; %#ok<AGROW>
                     end
                     var_names = [var_names, 'T ', formal_params{end}]; %#ok<AGROW>
-                    headerFile{end + 1, 1} = ['T ', mod_file_name, '<T>::', name, '(', var_names, ');']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    T ', name, '(', var_names, ');']; %#ok<AGROW>
                 end
             end
 
@@ -174,50 +174,33 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
             assigned_params = ParseAssignedBlock(parameters_blocks.ASSIGNED);
             parameter_params = ParseParameterBlock(parameters_blocks.PARAMETER);
 
-            notInitParams = {};
+            notInitCurrentParams = {};
 
-            for i = 1 : length(parameter_params)
-                curr_str = parameter_params{i};
+            for i = 1 : length(assigned_params)
+                tmpStr = assigned_params{i};
 
-                if isempty(strfind(curr_str, '='))
+                if strfind(tmpStr, '=')
                     continue
                 end
 
-                if curr_str(1) == 'i'
-                    notInitParams{end + 1, 1} = parameter_params{i}; %#ok<AGROW>
-                end
-            end
-
-            current_params = {};
-
-            if isempty(notInitParams)
-                for j = 1 : length(assigned_params)
-                    curr_str = assigned_params{j};
-                    if curr_str(1) == 'i'
-                         current_params{end + 1, 1} = curr_str; %#ok<AGROW>
-                    end
-                end
-            else
-                for i = 1 : length(notInitParams)
-                    for j = 1 : length(assigned_params)
-                        if ~strcmp(notInitParams{i}, assigned_params{j})
-                            current_params{end + 1, 1} = assigned_params{j}; %#ok<AGROW>
-                        end
-                    end
+                if tmpStr(1) == 'i'
+                    notInitCurrentParams{end + 1, 1} = assigned_params{i}; %#ok<AGROW>
                 end
             end
             
-            numParams = 0;
-            if isempty(current_params)
-                headerFile{end + 1, 1} = ['const size_t _numCurrents = ', int2str(length(numParams)), ';']; %#ok<AGROW>
-            else
-                for i = 1 : length(params)
-                    if isempty(strfind(params{i}, '['))
-                        numParams = numParams + 1;
-                    end
+            for i = 1 : length(parameter_params)
+                tmpStr = parameter_params{i};
+
+                if isempty(strfind(tmpStr, '='))
+                    continue
                 end
-                headerFile{end + 1, 1} = ['const size_t _numCurrents = ', int2str(numParams), ';']; %#ok<AGROW>
+
+                if tmpStr(1) == 'i'
+                    notInitCurrentParams{end + 1, 1} = parameter_params{i}; %#ok<AGROW>
+                end
             end
+
+            headerFile{end + 1, 1} = ['    const size_t _numCurrents = ', int2str(length(notInitCurrentParams)), ';']; %#ok<AGROW>
             
         elseif strfind(tline, '%NUM_STATES')
 
@@ -226,7 +209,7 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                 params = ParseStateBlock(scope);
                 numParams = 0;
                 if isempty(params)
-                    headerFile{end + 1, 1} = ['const size_t _numStates = ', int2str(numParams), ';']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    const size_t _numStates = ', int2str(numParams), ';']; %#ok<AGROW>
                 else
                     for i = 1 : length(params)
                         if isempty(strfind(params{i}, '['))
@@ -234,7 +217,7 @@ function GenerateCppHdrFile(mod_file_name, parameters_blocks, freeLocalVars, out
                         end
                     end        
                     
-                    headerFile{end + 1, 1} = ['const size_t _numStates = ', int2str(numParams), ';']; %#ok<AGROW>
+                    headerFile{end + 1, 1} = ['    const size_t _numStates = ', int2str(numParams), ';']; %#ok<AGROW>
                 end
             end
         else

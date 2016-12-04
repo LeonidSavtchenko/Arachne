@@ -1,6 +1,10 @@
-%%
-function PrepareParamsWithGUI()
-   
+function PrepareAndShowGUI()
+%% Prepare and show a GUI specified by "guiType" global variable.
+%  The exceptions are the cases when we are called from Matlab mobile (which does not support GUI)
+%  or user explicitly specified not to use GUI.
+%  In these cases, we just use default values for all the parameters normally exposed by GUI
+%  and simply call the "OK" button callback function.
+
     close all;
     clc;
     
@@ -20,7 +24,7 @@ function PrepareParamsWithGUI()
     % Prepare the scenario name
     scenario = GuiTypeToScenarioName(guiType);
     
-    name = ['Gamma Simulator (', scenario, ')'];
+    name = ['Arachne (', scenario, ')'];
     
     % Create a figure
     hf = figure('Units', 'pixels', ...
@@ -63,7 +67,7 @@ function PrepareParamsWithGUI()
     % Two blank strips at top and bottom of the window
     ht = zeros(1, 4);
     
-    bgc = {palette.backgroundColor, palette.gray, palette.gray, palette.backgroundColor};
+    bgc = {palette.backgroundColor, palette.stripColor, palette.stripColor, palette.backgroundColor};
     for i = 1 : length(ht)
         ht(i) = uicontrol('Style', 'text', ...
                           'Units', 'pixels', ...

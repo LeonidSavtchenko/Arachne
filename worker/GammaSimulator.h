@@ -74,7 +74,7 @@ private:
     bool gatherSCM;
     bool enableAstro;
     bool enableExtraCurrent_e, enableExtraCurrent_i;
-	bool importMod_e, importMod_i;
+    bool importMod_e, importMod_i;
 
     BaseStdpMechanism<T, RNGT> *stdpMechanism_ee;
     BaseStdpMechanism<T, RNGT> *stdpMechanism_ii;
@@ -258,9 +258,9 @@ private:
     ExtraCurrent<T, RNGT> extraCurrent_e;
     ExtraCurrent<T, RNGT> extraCurrent_i;
 
-	// Mod currents
-	ModCurrent<T> modCurrent_e;
-	ModCurrent<T> modCurrent_i;
+    // Mod currents
+    ModCurrent<T, RNGT> modCurrent_e;
+    ModCurrent<T, RNGT> modCurrent_i;
 
     LocalVector<int> lastSpikes_local;
     DistVector<int> lastSpikes_e;

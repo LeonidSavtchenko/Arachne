@@ -2,47 +2,37 @@ function GenerateCumulativeCppSrcFile(modFileNames_e, modFileNames_i, outDirPath
 
     outFileName = 'AllModCurrents.cpp';
     
-    fprintf('Generating %s ...\n', outFileName);
-    
-    numLines = 13;
-    outFileLines = {numLines, 1};
-    
-    outFileLines{1, 1} = '#include "AllModCurrents.h"'; 
-    outFileLines{2, 1} = '';
+    fprintf('    Generating %s ...\n', outFileName);
     
     lenModFileNames_e = length(modFileNames_e);
     lenModFileNames_i = length(modFileNames_i);
     
-    if lenModFileNames_e > 0
-        outFileLines{3, 1} = 'template';
-        outFileLines{4, 1} = 'class AllModCurrents_e<float>;';
-        outFileLines{5, 1} = '';
-        outFileLines{6, 1} = 'template';
-        outFileLines{7, 1} = 'class AllModCurrents_e<double>;';
-    else
-        outFileLines{3, 1} = '';
-        outFileLines{4, 1} = '';
-        outFileLines{5, 1} = '';
-        outFileLines{6, 1} = '';
-        outFileLines{7, 1} = '';
-    end
+    outFileLines = {};
     
-    outFileLines{8, 1} = '';
-    
-    if lenModFileNames_i > 0
-        outFileLines{9, 1} = 'template';
-        outFileLines{10, 1} = 'class AllModCurrents_i<float>;';
-        outFileLines{11, 1} = '';
-        outFileLines{12, 1} = 'template';
-        outFileLines{13, 1} = 'class AllModCurrents_i<double>;';
-    else
-        outFileLines{9, 1} = '';
-        outFileLines{10, 1} = '';
-        outFileLines{11, 1} = '';
-        outFileLines{12, 1} = '';
-        outFileLines{13, 1} = '';
+    outFileLines{end + 1, 1} = '#include "AllModCurrents.h"';
+    outFileLines{end + 1, 1} = '';   
+    for i = 1 : lenModFileNames_e
+        outFileLines{end + 1, 1} = sprintf('#include "%s.cpp"', modFileNames_e{i});
     end
-
+    outFileLines{end + 1, 1} = '';
+    for i = 1 : lenModFileNames_i
+        outFileLines{end + 1, 1} = sprintf('#include "%s.cpp"', modFileNames_i{i});
+    end
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = 'template';
+    outFileLines{end + 1, 1} = 'class AllModCurrents_e<float>;';
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = 'template';
+    outFileLines{end + 1, 1} = 'class AllModCurrents_e<double>;';
+    
+    outFileLines{end + 1, 1} = '';
+    
+    outFileLines{end + 1, 1} = 'template';
+    outFileLines{end + 1, 1} = 'class AllModCurrents_i<float>;';
+    outFileLines{end + 1, 1} = '';
+    outFileLines{end + 1, 1} = 'template';
+    outFileLines{end + 1, 1} = 'class AllModCurrents_i<double>;';
+    
     outFilePath = fullfile(outDirPath, outFileName);
     fid = fopen(outFilePath, 'w+');
     if fid == -1

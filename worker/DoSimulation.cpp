@@ -79,7 +79,7 @@ void GammaSimulator<T, RNGT>::DoSimulationMultithreaded()
     
     // Timer used to estimate duration of one iteration
     static clock_t time;
-	
+    
     // Whether termination is requested by user
     static bool terminationRequested;
 
@@ -134,7 +134,7 @@ void GammaSimulator<T, RNGT>::DoSimulationMultithreaded()
         // Compute deterministic external drive to E-cells
         bool firstCall = (iter == m_steps_prev);
         ComputeExternalDrive_e(t_old, firstCall);
-		
+        
         // 1st elementwise operation
         ElementwiseOperation1();
         
