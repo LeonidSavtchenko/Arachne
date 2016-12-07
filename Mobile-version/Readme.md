@@ -1,3 +1,3 @@
 # ARACHNE for Android
 
-This directory contains the files for the host computer to the Android operating system
+5.	 "Mobile-version" contains files for the mobile device operating under Mobile OS. The cluster for this demo version is preinstalled.
