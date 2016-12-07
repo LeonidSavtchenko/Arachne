@@ -5,7 +5,7 @@ The entire contents of Demo-version must be copied and installed anywhere on the
 
 # Instructions
 
-Download all files keeping structure  to your computer opereting under OS Windows in any place. 
+Download all files keeping the structure of the directory "Core" to your computer opereting under OS Windows in any place. 
 
 Press START_ARACHNE.exe to execute the program. 
 
@@ -13,6 +13,6 @@ The program will automatically link to the preinstalled cluster.
 
 You will able: to calculate the pre installed networks, to change the settings and compute the new networks or create your own networks.
 
-
+See manual for details. 
 
 
