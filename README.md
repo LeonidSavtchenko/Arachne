@@ -2,7 +2,7 @@
 
 # ARACHNE
 
-ARACHNE is a newly designed simulation environment in which neural network organization, optimization and execution take advantage of the pre-set, optimized parallel algorithms for remote computations and friendly user interface located on a local computer. With this strategy, even amateur is able to integrate the representative variety of biophysical mechanisms pertinent to nerve cells, within a single model in which the network complexity is limited only by the availability of remote computing resources, and not by the modelling kernel or its interface.
+ARACHNE is a newly designed simulation environment in which neural and neuroglial network organisation, optimisation and execution take advantage of the pre-set, optimised parallel algorithms for remote computations, and of a friendly user interface located on a local computer. In these settings, a neuroscientist without IT background should be able to incorporate the representative variety of biophysical mechanisms pertinent to nerve (or astroglial) cells, within a single network model in which the network complexity is limited only by the availability of remote computing resources, and not by the modelling kernel or its interface.
 
 
 
