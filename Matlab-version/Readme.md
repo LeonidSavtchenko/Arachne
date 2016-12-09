@@ -7,7 +7,16 @@ MatLab version directory contains  files with MatLab codes and the bat-files tha
 
 2.	Download the folder “host” with its contents from https://github.com/LeonidSavtchenko/Arachne repository to the local machine.
 
-3.	
+3.	Go to Core\3rdparty\scripts\win-lin\params.bat
+
+   modify the row 
+
+   set "MATLABHOSTDIR=d:\****" 
+
+   wheere "d:\****" a place where you have copied the program
+
+   save the param.bat
+
 
 4.	ARACHNE host files are ready for preinstalled cluster.
 
