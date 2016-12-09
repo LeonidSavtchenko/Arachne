@@ -15,12 +15,14 @@ set "MATLABHOSTDIR=d:\****"
 
 wheere "d:\****" a place where you have copied the program
 
-Press START_ARACHNE.exe to execute the program. 
+save the param.bat
+
+Now you can launch START_ARACHNE.exe to execute the program. 
 
 The program will automatically link to the preinstalled cluster.
 
 You will able: to calculate the pre installed networks, to change the settings and compute the new networks or create your own networks.
 
-See manual for details. 
+See Manual for details. 
 
 
