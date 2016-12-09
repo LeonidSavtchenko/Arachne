@@ -20,7 +20,7 @@ function BasicParams(varargin)
     remoteHPC = true;
     
     % Names of all cluster nodes you may want to use in simulation
-    demoMode = true;
+    demoMode = false;
     if ~demoMode
         availableNodes = {'tuxm1', ...
                           'tuxm2', ...

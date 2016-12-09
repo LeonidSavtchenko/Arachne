@@ -1,9 +1,9 @@
 @echo off
 
 set HEADNODEIP=144.82.46.83
-set LOGIN=reviewer
-set PASSWORD=reviewer1
-set "HEADNODEWORKERDIR=/home/reviewer/worker"
+set LOGIN=my_login
+set PASSWORD=my_password
+set "HEADNODEWORKERDIR=/home/savtchenko/amcbridge/phase12/worker"
 
 set "MATLABHOSTDIR=D:\ucl\svn\phase12\host"
 
