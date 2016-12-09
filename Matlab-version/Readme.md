@@ -7,7 +7,7 @@ MatLab version directory contains  files with MatLab codes and the bat-files tha
 
 2.	Download the folder “host” with its contents from https://github.com/LeonidSavtchenko/Arachne repository to the local machine.
 
-3.	Open file on your host computer “root\host\Code\scripts\win-lin\params.bat” and adjust the following 4 variables: : “HEADNODEIP” – IP address of the cluster, “LOGIN” – Login name of your account of the cluster, “PASSWORD” – password of your account, “HEADNODEWORKERDIR” – the address of the location of “gs.exe” file on the cluster, to be consistent with your cluster.
+3.	
 
 4.	ARACHNE host files are ready for preinstalled cluster.
 
