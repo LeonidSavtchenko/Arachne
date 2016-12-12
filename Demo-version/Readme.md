@@ -7,16 +7,6 @@ The entire contents of Demo-version must be copied and installed anywhere on the
 
 Download all files keeping the structure of the directory "Core" to your computer opereting under OS Windows in any place. 
 
-Go to Core\3rdparty\scripts\win-lin\params.bat
-
-modify the row 
-
-set "MATLABHOSTDIR=d:\****" 
-
-wheere "d:\****" a place where you have copied the program
-
-save the param.bat
-
 Now you can launch START_ARACHNE.exe to execute the program. 
 
 
