@@ -3,7 +3,7 @@
 # ARACHNE
 
 ## version 2.0
-## Update this version is expected before 01.02.2017
+## The update of the version is expected before 01.02.2017
 
 
 
