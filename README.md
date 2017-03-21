@@ -46,8 +46,10 @@ Manual and API documentation can be found at https://github.com/LeonidSavtchenko
 Written by <a href="mailto:savtchenko#yahoo.com">Leonid Savtchenko</a>.<br> 
 Visit us at:<br>
 http://www.ucl.ac.uk/ion/departments/epilepsy/themes/synaptic-imaging <br>
+Department of Clinical and Experimental Epilepsy<br>
+Institute of Neurology<br>
 University College London<br>
-UK
+UK<br>
 
 </address>
 
