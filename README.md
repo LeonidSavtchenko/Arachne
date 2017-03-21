@@ -31,13 +31,13 @@ ARACHNE is a newly designed simulation environment in which neural and neuroglia
 
 ## Examples
 
-There are five files with initial parameters for different configurations of ARACHNE
+There are five files with a set of parameters for different configurations of ARACHNE
 https://github.com/LeonidSavtchenko/Arachne/tree/master/ExamplePLOS
-A set of basic input parameters necessary for reproduction plots in the manuscript submitted to Plos Comp Biology
+A set of basic input parameters necessary for reproduction plots in the manuscript published in PLOS Comp Biology
 
 ## Documentation
 
-Manual and API documentation can be found a https://github.com/LeonidSavtchenko/Arachne
+Manual and API documentation can be found at https://github.com/LeonidSavtchenko/Arachne
 
 
 
