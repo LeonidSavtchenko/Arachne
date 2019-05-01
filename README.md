@@ -3,8 +3,8 @@
 # ARACHNE
 
 ## version 2.0
-To download the self - installing version of ARACHNE with Amazone cloud computation please 
-Visit us at:<br> https://neuroalgebra.co.uk/home<br>
+To download the self - installing  ARACHNE with remote calculation on Amazone cloud, please visit 
+ at:<br> https://neuroalgebra.co.uk/home<br>
 ## Update is expected to be released at 01.04.2019
 
 
