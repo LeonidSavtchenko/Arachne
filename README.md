@@ -5,9 +5,9 @@
 ## version 2.0
 To download the self - installing  ARACHNE with remote calculation on Amazone cloud, please visit 
  at:<br> https://neuroalgebra.co.uk/home<br>
-## Update is expected to be released at 01.04.2021
 
-## Update. Added the installation version of the Arachne (Arachne_web.exe) for Windows. This version allows you to compute both on a local computer and on a remote cluster.
+
+## Update 04/03/2021. Added the installation version of the Arachne (Arachne_web.exe) for Windows. This version allows you to compute both on a local computer and on a remote cluster.
 
 ARACHNE is a newly designed simulation environment in which neural and neuroglial network organisation, optimisation and execution take advantage of the pre-set, optimised parallel algorithms for remote computations, and of a friendly user interface located on a local computer. In these settings, a neuroscientist without IT background should be able to incorporate the representative variety of biophysical mechanisms pertinent to nerve (or astroglial) cells, within a single network model in which the network complexity is limited only by the availability of remote computing resources, and not by the modelling kernel or its interface.
 
