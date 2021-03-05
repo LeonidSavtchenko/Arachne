@@ -18,6 +18,9 @@ ARACHNE is a newly designed simulation environment in which neural and neuroglia
 
 ## Installation. 
 
+### Simple version
+### Download Arachne_web.1.6.exe and install on your local Windows computer. 
+
 ### There are 4 versions of ARACHNE. Each version has its own parameters of installation.
 
 1. "Demo-version" - contains executables and the directory "Core", to create and to compute networks on a cluster with preinstalled kernel. These executables were compiled in MATLAB version 8.1.0.604 (R2013a). To run the demo on a local computer where this version of MATLAB is not installed (or the computer does not have any version of Matlab), a user has to install corresponding version of MATLAB Runtime (R2013a). It is a free package that can be downloaded from the  webpage:    https://www.mathworks.com/products/compiler/mcr/. The entire contents of Demo-version must be copied and installed anywhere on the local computer. To run GUI of ARACHNE the executable file START_Arachne.exe must be launched. (See Manual.docx for details) 
