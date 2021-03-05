@@ -2,9 +2,8 @@
 
 # ARACHNE
 
-## version 2.0
-To download the self - installing  ARACHNE with remote calculation on Amazone cloud, please visit 
- at:<br> https://neuroalgebra.co.uk/home<br>
+## version 3.0
+
 
 
 ## Update 04/03/2021. Added the installation version of the Arachne (Arachne_web.exe) for Windows. This version allows you to compute both on a local computer and on a remote cluster.
